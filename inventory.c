@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "object.h"
 #include "misc.h"
 #include "noun.h"
@@ -12,22 +14,22 @@ void executeGet(const char* noun) {
     } else if (obj->location == player) {
         printf("You already have %s in your bag.\n", obj->description);
     } else if (obj->location == guard) {
-        printf("You should ask %s nicely.\n", obj->location->description)
+        printf("You should ask %s nicely.\n", obj->location->description);
     } else {
         moveObject(obj, player);
     }
 }
 
 void executeDrop(const char* noun) {
-    moveObject(getPossesion(player, "drop", noun), player->location);
+    moveObject(getPossession(player, "drop", noun), player->location);
 }
 
 void executeAsk(const char* noun) {
-    moveObject(getPossesion(actorHere(), "ask", noun), player);
+    moveObject(getPossession(actorHere(), "ask", noun), player);
 }
 
 void executeGive(const char* noun) {
-    moveObject(getPossesion(player, "drop", noun), actorHere());
+    moveObject(getPossession(player, "drop", noun), actorHere());
 }
 
 void executeInventory(void) {
