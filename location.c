@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "misc.h"
 #include "noun.h"
-
-
-static unsigned playerLocation = 0;
 
 void executeLook(const char* noun) {
     if (noun != NULL && strcmp(noun, "around") == 0) {
@@ -17,20 +15,29 @@ void executeLook(const char* noun) {
 
 void executeGo(const char* noun) {
     Object* obj = getVisible("Where do you want to go?", noun);
-    if (obj == NULL) {
-        // already handled in getVisible()
-       printf("I don't understand where you're trying to go.\n");
-    } else if ((getPassage(player->location, obj)) != NULL) {
-        printf("OK.\n");
-        player->location = obj;
-        executeLook("around");
-    } else if (obj->location != player->location) {
-        printf("You don't see any %s here.\n", noun);
-    } else if (obj->destination != NULL) {
-        printf("OK.\n");
-        player->location = obj->destination;
-        executeLook("around");
-    } else {
-        printf("Can't get much closer than this.\n");
+    switch (getDistance(player, obj)) {
+        case distOverthere:
+            printf("OK.\n");
+            player->location = obj;
+            executeLook("around");
+            break;
+        case distNotHere:
+            printf("You don't see any %s here.\n", noun);
+            break;
+        case distUnknownObject:
+            // already handled in getVisible()
+            break;
+        default:
+            if (obj->destination != NULL)
+            {
+                printf("OK.\n");
+                player->location = obj->destination;
+                executeLook("around");
+            }
+            else
+            {
+                printf("Can't get much closer than this.\n");
+            }
+            break;
     }
 }
