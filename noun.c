@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include "misc.h"
 
 static bool objectHasTag(Object* obj, const char* noun) {
     return noun != NULL && *noun != '\0' && strcmp(noun, obj->tag) == 0;
@@ -26,9 +27,10 @@ Object* getVisible(const char* intention, const char* noun) {
                 obj == player->location ||
                 obj->location == player ||
                 obj->location == player->location ||
-                obj->location == NULL ||
-                obj->location->location == player ||
-                obj->location->location == player->location)) {
+                getPassage(player->location, obj) != NULL ||
+                (obj->location != NULL &&
+                    (obj->location->location == player ||
+                obj->location->location == player->location)))) {
         printf("You don't see any %s here.\n", noun);
         obj = NULL;
     }
