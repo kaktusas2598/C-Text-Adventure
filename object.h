@@ -3,7 +3,7 @@
 
 struct Object {
     const char* description;
-    const char* tag;
+    const char** tags;
     struct Object* location;
     struct Object* destination;
 };
@@ -19,7 +19,9 @@ extern Object objs[];
 #define player (objs + 5)
 #define intoCave (objs + 6)
 #define exitCave (objs + 7)
+#define wallField (objs + 8)
+#define wallCave (objs + 9)
 
-#define endOfObjs (objs + 8)
+#define endOfObjs (objs + 10)
 
 #endif // __Object__
