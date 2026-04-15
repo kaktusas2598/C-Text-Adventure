@@ -13,10 +13,8 @@ bool parseAndExecute(char* input) {
             return false;
         } else if (strcmp(verb, "look") == 0) {
             executeLook(noun);
-            /*printf("You are in the dark forest surrounded by ancient oak tress.\n");*/
         } else if (strcmp(verb, "go") == 0) {
             executeGo(noun);
-            /*printf("It is too dark to go anywhere.\n");*/
         } else if (strcmp(verb, "get") == 0) {
             executeGet(noun);
         } else if (strcmp(verb, "drop") == 0) {

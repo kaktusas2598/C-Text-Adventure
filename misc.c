@@ -11,7 +11,7 @@ Object* getPassage(Object* from, Object* to) {
     if (from != NULL && to != NULL) {
         Object* obj;
         for (obj = objs; obj < endOfObjs; obj++) {
-            if (obj->location == from && obj->destination == to) {
+            if (isHolding(from, obj) && obj->destination == to) {
                 return obj;
             }
         }
@@ -55,4 +55,6 @@ int listObjectsAtLocation(Object* location) {
             printf("%s\n", obj->description);
         }
     }
+
+    return count;
 }

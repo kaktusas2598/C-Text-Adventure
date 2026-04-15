@@ -40,7 +40,7 @@ void executeAsk(const char* noun) {
 }
 
 void executeGive(const char* noun) {
-    moveObject(getPossession(player, "drop", noun), actorHere());
+    moveObject(getPossession(player, "give", noun), actorHere());
 }
 
 void executeInventory(void) {
