@@ -47,7 +47,7 @@ Object* getPossession(Object* from, const char* verb, const char* noun) {
     Object* obj = NULL;
     if (from == NULL) {
         printf("I don't understand who you want to %s.\n", verb);
-    } else if ((obj == getObject(noun, from, distHeldContained)) == NULL) {
+    } else if ((obj = getObject(noun, from, distHeldContained)) == NULL) {
         if (getObject(noun, player, distNotHere) == NULL) {
             printf("I don't undestand what you want to %s.\n", verb);
         } else if (from == player) {
