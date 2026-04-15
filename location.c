@@ -9,7 +9,34 @@ void executeLook(const char* noun) {
         printf("You are in %s.\n", player->location->description);
         listObjectsAtLocation(player->location);
     } else {
-        printf("I don't understand what you're trying to look at.\n");
+        Object* obj = getVisible("What do you want to look at?", noun);
+        switch (getDistance(player, obj)) {
+            case distHereContained:
+                printf("Hard to see, try to get it first.\n");
+                break;
+            case distOverthere:
+                printf("Too far away, move closer.\n");
+                break;
+            case distNotHere:
+                printf("You don't see any %s here.\n", noun);
+                break;
+            case distUnknownObject:
+                // already handled in getVisible()
+                break;
+            default:
+                printf("%s\n", obj->details);
+                listObjectsAtLocation(obj);
+                break;
+        }
+    }
+}
+
+static void movePlayer(Object* passage) {
+    printf("%s\n", passage->textGo);
+    if (passage->destination != NULL) {
+        player->location = passage->destination;
+        printf("\n");
+        executeLook("around");
     }
 }
 
@@ -17,9 +44,7 @@ void executeGo(const char* noun) {
     Object* obj = getVisible("Where do you want to go?", noun);
     switch (getDistance(player, obj)) {
         case distOverthere:
-            printf("OK.\n");
-            player->location = obj;
-            executeLook("around");
+            movePlayer(obj);
             break;
         case distNotHere:
             printf("You don't see any %s here.\n", noun);
@@ -28,16 +53,7 @@ void executeGo(const char* noun) {
             // already handled in getVisible()
             break;
         default:
-            if (obj->destination != NULL)
-            {
-                printf("OK.\n");
-                player->location = obj->destination;
-                executeLook("around");
-            }
-            else
-            {
-                printf("Can't get much closer than this.\n");
-            }
+            movePlayer(obj);
             break;
     }
 }

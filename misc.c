@@ -11,11 +11,10 @@ Object* getPassage(Object* from, Object* to) {
     if (from != NULL && to != NULL) {
         Object* obj;
         for (obj = objs; obj < endOfObjs; obj++) {
-            if (isHolding(from, obj) && obj->destination == to) {
+            if (isHolding(from, obj) && obj->prospect == to) {
                 return obj;
             }
         }
-        
     }
 
     return NULL;
@@ -36,7 +35,7 @@ Distance getDistance(Object* from, Object* to) {
 Object* actorHere(void) {
     Object* obj;
     for (obj = objs; obj < endOfObjs; obj++) {
-        if (isHolding(player->location, obj) && obj == guard) {
+        if (isHolding(player->location, obj) && obj != player && obj->health > 0) {
             return obj;
         }
     }
@@ -50,7 +49,7 @@ int listObjectsAtLocation(Object* location) {
     for (obj = objs; obj < endOfObjs; obj++) {
         if (obj != player && isHolding(location, obj)) {
             if (count++ == 0) {
-                printf("You see:\n");
+                printf("%s:\n", location->contents);
             }
             printf("%s\n", obj->description);
         }

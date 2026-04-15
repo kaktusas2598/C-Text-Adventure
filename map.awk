@@ -4,9 +4,10 @@ BEGIN     { print "digraph map {"; }
 END       { outputEdges(); print "}"; }
 function outputEdges()
 {
-   outputEdge(a["location"], a["destination"]);
+   outputEdge(a["location"], a["destination"], "");
+   outputEdge(a["location"], a["prospect"], " [style=dashed]");
 }
-function outputEdge(from, to)
+function outputEdge(from, to, style)
 {
-   if (from && to) print "\t" from " -> " to;
+   if (from && to) print "\t" from " -> " to style;
 }
