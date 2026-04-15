@@ -26,7 +26,6 @@ static Object* getObject(const char* noun, Object* from, Distance maxDistance) {
     return res;
 }
 
-
 Object* getVisible(const char* intention, const char* noun) {
     Object* obj = getObject(noun, player, distOverthere);
     if (obj == NULL) {
