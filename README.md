@@ -4,10 +4,16 @@ Fun little experiment building Old School text based adventure game in C, based 
 
 # Build instructions
 
- * Run `make object.h`
- * Run `make object.c`
+ * Run `make clean`
  * Run `make`
  * Run textAdventure.exe
 
+ # Build game map graph
+
+ * Run `make map.gv` 
+ * Run `make map.png` 
+
 # TODO
- * Replace awk code generation with something better, maybe a data design based approach
+ * Rewrite more akin to my own style and add comments
+ * Replace awk code generation with something better, maybe a data design based approach or perhaps Lua
+ * Remove all references to actual objects in the game, maybe with the exception of the player
