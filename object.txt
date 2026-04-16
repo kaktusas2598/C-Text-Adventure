@@ -1,7 +1,9 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include "object.h"
 
 struct Object {
+    bool (*condition)(void);
     const char* description;
     const char** tags;
     struct Object* location;
@@ -57,6 +59,15 @@ extern Object objs[];
      health      100
      capacity    20
 - intoCave
+     condition   { return guard->health == 0 || silver->location == guard; }
+     description "a cave entrance to the east"
+     tags        "east", "entrance"
+     location    field
+     destination cave
+     details     "The entrance is just a narrow opening in a small outcrop."
+     textGo      "You walk into the cave."
+- intoCaveBlocked
+     condition   { return guard->health > 0 && silver->location != guard; }
      description "a cave entrance to the east"
      tags        "east", "entrance"
      location    field

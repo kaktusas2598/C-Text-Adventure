@@ -4,7 +4,7 @@
 #include "object.h"
 
 bool isHolding(Object* container, Object* obj) {
-    return obj != NULL && obj->location == container;
+    return validObject(obj) && obj->location == container;
 }
 
 Object* getPassage(Object* from, Object* to) {
@@ -22,6 +22,7 @@ Object* getPassage(Object* from, Object* to) {
 
 Distance getDistance(Object* from, Object* to) {
     return to == NULL                               ? distUnknownObject :
+            !validObject(to)                        ? distNotHere :
             to == from                              ? distSelf :
             isHolding(from, to)                     ? distHeld :
             isHolding(to, from)                     ? distLocation :
