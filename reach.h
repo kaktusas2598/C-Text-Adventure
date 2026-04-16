@@ -1,0 +1,1 @@
+extern Object* reachableObject(const char* intention, const char* noun);
