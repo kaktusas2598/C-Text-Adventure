@@ -99,7 +99,7 @@ extern Object objs[];
      textGo      "Dense forest is blocking the way."
 - wallCave
      description "solid rock all around"
-     tags        "east", "north", "south", "rock"
+     tags        "east", "north", "rock"
      location    cave
      details     "Carved in stone is a secret password 'abccb'."
      textGo      "Solid rock is blocking the way."
