@@ -7,6 +7,25 @@ bool isHolding(Object* container, Object* obj) {
     return validObject(obj) && obj->location == container;
 }
 
+bool isLit(Object* location) {
+    Object* obj;
+    if (validObject(location)) {
+        if (location->light > 0) {
+            return true;
+        }
+        for (obj = objs; obj < endOfObjs; obj++) {
+            if (validObject(obj) && obj->light > 0 && isHolding(location, obj) || isHolding(location, obj->location)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static bool isNoticable(Object* obj) {
+    return obj->location == player || isLit(obj) || isLit(obj->prospect) || isLit(player->location);
+}
+
 Object* getPassage(Object* from, Object* to) {
     if (from != NULL && to != NULL) {
         Object* obj;
@@ -25,6 +44,7 @@ Distance getDistance(Object* from, Object* to) {
             !validObject(to)                        ? distNotHere :
             to == from                              ? distSelf :
             isHolding(from, to)                     ? distHeld :
+            !isNoticable(to)                         ? distNotHere :
             isHolding(to, from)                     ? distLocation :
             isHolding(from->location, to)           ? distHere :
             isHolding(from, to->location)           ? distHeldContained :
@@ -36,7 +56,7 @@ Distance getDistance(Object* from, Object* to) {
 Object* actorHere(void) {
     Object* obj;
     for (obj = objs; obj < endOfObjs; obj++) {
-        if (isHolding(player->location, obj) && obj != player && obj->health > 0) {
+        if (isHolding(player->location, obj) && obj != player && isNoticable(obj) && obj->health > 0) {
             return obj;
         }
     }
@@ -48,7 +68,7 @@ int listObjectsAtLocation(Object* location) {
     int count = 0;
     Object* obj;
     for (obj = objs; obj < endOfObjs; obj++) {
-        if (obj != player && isHolding(location, obj)) {
+        if (obj != player && isHolding(location, obj) && isNoticable(obj)) {
             if (count++ == 0) {
                 printf("%s:\n", location->contents);
             }

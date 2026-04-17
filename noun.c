@@ -31,8 +31,10 @@ Object* getVisible(const char* intention, const char* noun) {
     if (obj == NULL) {
         if (getObject(noun, player, distNotHere) == NULL) {
             printf("I don't understand %s.\n", intention);
-        } else {
+        } else if (isLit(player->location)) {
             printf("You don't see any %s here.\n", noun);
+        } else {
+            printf("It's too dark to see anything.\n");
         }
     } else if (obj == &ambigousNoun) {
         printf("Please specify which %s you mean.\n", noun);
