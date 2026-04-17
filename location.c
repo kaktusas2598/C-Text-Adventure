@@ -52,7 +52,7 @@ bool executeGo(void) {
     Object* obj = getVisible("Where do you want to go?", params[0]);
     switch (getDistance(player, obj)) {
         case distOverthere:
-            movePlayer(obj);
+            movePlayer(getPassage(player->location, obj));
             break;
         case distNotHere:
             printf("You don't see any %s here.\n", params[0]);
