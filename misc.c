@@ -14,7 +14,7 @@ bool isLit(Object* location) {
             return true;
         }
         for (obj = objs; obj < endOfObjs; obj++) {
-            if (validObject(obj) && obj->light > 0 && isHolding(location, obj) || isHolding(location, obj->location)) {
+            if (validObject(obj) && obj->light > 0 && (isHolding(location, obj) || isHolding(location, obj->location))) {
                 return true;
             }
         }
