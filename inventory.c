@@ -14,7 +14,7 @@ bool executeGet(void) {
             printf("You should not do that to yourself.\n");
             break;
         case distHeld:
-            printf("You already have %s in your bag.\n", obj->description);
+            printf("You already have %s.\n", obj->description);
             break;
         case distOverthere:
             printf("Too far away, move closer.\n");

@@ -37,7 +37,7 @@ void moveObject(Object* obj, Object* to) {
             "It doesn't seem to fit there.\n"
         );
     } else if (obj->weight > to->capacity) {
-        printf("This is way too heavy.\n");
+        printf("That is way too heavy.\n");
     } else if (obj->weight + weightOfContents(to) > to->capacity) {
         printf("That would become too heavy.\n");
     } else {

@@ -15,7 +15,7 @@ Object* reachableObject(const char* intention, const char* noun) {
             printf("You would have to get it from %s first.\n", obj->location->description);
             break;
         case distOverthere:
-            printf("That is too far away.\n");
+            printf("Too far away, move closer.\n");
             break;
         case distNotHere:
         case distUnknownObject:
