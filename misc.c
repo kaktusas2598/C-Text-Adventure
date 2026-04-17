@@ -44,7 +44,7 @@ Distance getDistance(Object* from, Object* to) {
             !validObject(to)                        ? distNotHere :
             to == from                              ? distSelf :
             isHolding(from, to)                     ? distHeld :
-            !isNoticable(to)                         ? distNotHere :
+            !isNoticable(to)                        ? distNotHere :
             isHolding(to, from)                     ? distLocation :
             isHolding(from->location, to)           ? distHere :
             isHolding(from, to->location)           ? distHeldContained :
