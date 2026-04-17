@@ -16,6 +16,11 @@ Fun little experiment building Old School text based adventure game in C, based 
  * Run `make map.gv` 
  * Run `make map.png` 
 
+ # Test instructions
+  * Generate transcript from a testscript: `./textAdventure.exe testscript.txt > transcript.txt`
+  * Compare baseline with transcript: `diff baseline.txt transcript.txt`
+  * Or alternatively run `make success.txt`
+
 # TODO
  * Rewrite more akin to my own style and add comments
  * Replace awk code generation with something better, maybe a data design based approach or perhaps Lua

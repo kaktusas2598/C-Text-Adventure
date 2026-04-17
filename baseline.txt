@@ -1,0 +1,255 @@
+Welcome to Text Adventure!
+You are in an open field.
+You see:
+a silver coin
+a burly guard
+a cave entrance to the east
+dense forest all around
+a lamp
+
+--> mumble
+I don't know how to 'mumble'.
+
+--> inventory
+You are poor as heck, your pockets are empty.
+
+--> get whatever
+I don't understand what you want to get.
+
+--> get yourself
+You should not do that to yourself.
+
+--> get silver coin
+You pick up a silver coin.
+
+--> get coin
+You already have a silver coin.
+
+--> get guard
+That is way too heavy.
+
+--> get cave
+Too far away, move closer.
+
+--> look cave
+Too far away, move closer.
+
+--> inventory
+You have:
+a silver coin
+
+--> look at coin
+The coin has an eagle on the obverse.
+
+--> get lamp
+You pick up a lamp.
+
+--> inventory
+You have:
+a silver coin
+a lamp
+
+--> go east
+The guard stops you from walking into the cave.
+
+--> ask coin
+There appears to be no coin you can get from a burly guard.
+
+--> put coin in cave
+Too far away, move closer.
+
+--> give coin
+You give a silver coin to a burly guard.
+
+--> give lamp to guard
+You give a lamp to a burly guard.
+
+--> look lamp
+Hard to see, try to get it first.
+
+--> get lamp from guard
+You should ask a burly guard nicely.
+
+--> ask lamp from guard
+You get a lamp from a burly guard.
+
+--> open yourself
+You should not be doing that to yourself.
+
+--> open coin
+You would have to get it from a burly guard first.
+
+--> open cave
+Too far away, move closer.
+
+--> go cave
+You walk into the cave.
+
+It's too dark to see anything.
+You see:
+an exit to the west
+
+--> go east
+It's too dark to see anything.
+
+--> turn lamp on
+You turn on a lamp.
+
+You are in a little cave.
+You see:
+an exit to the west
+solid rock all around
+a closed door to the south
+a tiny key
+
+--> look around
+You are in a little cave.
+You see:
+an exit to the west
+solid rock all around
+a closed door to the south
+a tiny key
+
+--> get key from cave
+You pick up a tiny key.
+
+--> ask coin
+I don't understand who you want to ask.
+
+--> give coin
+You are not holding any coin.
+
+--> go south
+The door is closed.
+
+--> open door
+You open a closed door to the south.
+
+--> go south
+You walk through the door into a backroom.
+
+You are in a backroom.
+You see:
+solid rock all around
+an open door to the north
+a wooden box
+
+--> open box
+That is locked.
+
+--> put key in box
+The key seems to fit the lock.
+
+--> unlock box
+You unlock a wooden box.
+
+--> unlock box
+That is already unlocked.
+
+--> open box
+You open a wooden box.
+
+--> look box
+The box is open.
+You see:
+a gold coin
+
+--> get coin from box
+You get a gold coin from a wooden box.
+
+--> put coin in box
+You put a gold coin in a wooden box.
+
+--> lock box
+That is still open.
+
+--> close box
+You close a wooden box.
+
+--> lock box
+You lock a wooden box.
+
+--> lock box
+That is already locked.
+
+--> drop key
+You drop a tiny key.
+
+--> lock box
+That is already locked.
+
+--> unlock box
+You don't have the key for that.
+
+--> get key
+You pick up a tiny key.
+
+--> go north
+You walk through the door into the cave.
+
+You are in a little cave.
+You see:
+an exit to the west
+solid rock all around
+an open door to the south
+
+--> drop key
+You drop a tiny key.
+
+--> go west
+You walk out of the cave.
+
+You are in an open field.
+You see:
+a burly guard
+a cave entrance to the east
+dense forest all around
+
+--> turn lamp on
+The lamp is already on.
+
+--> turn lamp off
+You turn off a lamp.
+
+--> turn lamp off
+The lamp is already off.
+
+--> drop lamp
+You drop a lamp.
+
+--> ask coin
+You get a silver coin from a burly guard.
+
+--> turn coin on
+You cannot turn that on.
+
+--> turn coin off
+You cannot turn that off.
+
+--> open coin
+That cannot be opened.
+
+--> close coin
+That cannot be closed.
+
+--> lock coin
+That cannot be locked.
+
+--> unlock coin
+That cannot be unlocked.
+
+--> drop coin
+You drop a silver coin.
+
+--> drop coin
+You are not holding any coin.
+
+--> look backroom
+You don't see any backroom here.
+
+--> go backroom
+You don't see any backroom here.
+
+--> quit
+
+Good Bye!
