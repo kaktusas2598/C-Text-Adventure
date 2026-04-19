@@ -1,1 +1,1 @@
-extern void moveObject(Object* obj, Object* to);
+extern int moveObject(Object* obj, Object* to);

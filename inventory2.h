@@ -1,4 +1,4 @@
-extern bool executeGetFrom(void);
-extern bool executePutIn(void);
-extern bool executeAskFrom(void);
-extern bool executeGiveTo(void);
+extern int executeGetFrom(void);
+extern int executePutIn(void);
+extern int executeAskFrom(void);
+extern int executeGiveTo(void);

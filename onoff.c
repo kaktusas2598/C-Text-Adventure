@@ -5,7 +5,7 @@
 #include "reach.h"
 #include "toggle.h"
 
-bool executeTurnOn(void) {
+int executeTurnOn(void) {
     Object* obj = reachableObject("what to turn on", params[0]);
     if (obj != NULL) {
         if (obj == lampOff) {
@@ -13,12 +13,13 @@ bool executeTurnOn(void) {
         } else {
             printf(obj == lampOn ? "The lamp is already on.\n" : "You cannot turn that on.\n");
         }
+        return 1;
     }
 
-    return true;
+    return 0;
 }
 
-bool executeTurnOff(void) {
+int executeTurnOff(void) {
     Object* obj = reachableObject("what to turn off", params[0]);
     if (obj != NULL) {
         if (obj == lampOn) {
@@ -26,7 +27,8 @@ bool executeTurnOff(void) {
         } else {
             printf(obj == lampOff ? "The lamp is already off.\n" : "You cannot turn that off.\n");
         }
+        return 1;
     }
 
-    return true;
+    return 0;
 }

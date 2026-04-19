@@ -26,22 +26,31 @@ static void describeMove(Object* obj, Object* to) {
     }
 }
 
-void moveObject(Object* obj, Object* to) {
+int moveObject(Object* obj, Object* to) {
     if (obj == NULL) {
         // Handled by getVisible() or getPossesion()
+        return 0;
     } else if (to == NULL) {
         printf("There is nobody here to give that to.\n");
+        return 0;
+    } else if (obj->location != NULL && obj->location != player && obj->location->health > 0 && obj->location->trust <= 0) {
+        printf("It seems %s feels reluctant to give you anything.\n", obj->location->description);
+        return 1;
     } else if (to->capacity == 0) {
         printf(obj == keyForBox && (to == closedBox || to == lockedBox) ?
             "The key seems to fit the lock.\n" :
             "It doesn't seem to fit there.\n"
         );
+        return 1;
     } else if (obj->weight > to->capacity) {
         printf("That is way too heavy.\n");
+        return 1;
     } else if (obj->weight + weightOfContents(to) > to->capacity) {
         printf("That would become too heavy.\n");
+        return 1;
     } else {
         describeMove(obj, to);
         obj->location = to;
+        return 1;
     }
 }

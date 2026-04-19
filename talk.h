@@ -1,2 +1,2 @@
-extern bool executeTalk(void);
-extern bool executeTalkTo(void);
+extern int executeTalk(void);
+extern int executeTalkTo(void);

@@ -1,3 +1,3 @@
-extern bool executeLookAround(void);
-extern bool executeLook(void);
-extern bool executeGo(void);
+extern int executeLookAround(void);
+extern int executeLook(void);
+extern int executeGo(void);

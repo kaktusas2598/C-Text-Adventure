@@ -1,2 +1,2 @@
-extern bool executeTurnOn(void);
-extern bool executeTurnOff(void);
+extern int executeTurnOn(void);
+extern int executeTurnOff(void);

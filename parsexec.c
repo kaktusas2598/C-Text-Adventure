@@ -11,26 +11,33 @@
 #include "openclose.h"
 #include "onoff.h"
 #include "talk.h"
+#include "attack.h"
 
+// Each command invokes a function that returns the time taken by the command, or -1 to quit.
 typedef struct {
     const char* pattern;
-    bool (*function)(void);
+    int (*function)(void);
 } Command;
 
-static bool executeQuit(void) {
-    return false;
+static int executeQuit(void) {
+    return -1;
 }
 
-static bool executeNoMatch(void) {
+static int executeNoMatch(void) {
     const char *src = *params;
     int len;
     for (len = 0; src[len] != '\0' && !isspace(src[len]); len++);
     if (len > 0)
         printf("I don't know how to '%.*s'.\n", len, src);
-    return true;
+    return 0;
 }
 
-bool parseAndExecute(char* input) {
+static int executeWait(void) {
+    printf("Some time passes...\n");
+    return 1;
+}
+
+int parseAndExecute(char* input) {
     static const Command commands[] = {
         {"quit", executeQuit},
         {"look", executeLookAround},
@@ -62,6 +69,10 @@ bool parseAndExecute(char* input) {
         {"talk about A with B", executeTalkTo},
         {"talk about A", executeTalk},
         {"talk A", executeTalk},
+        {"attack with B", executeAttack},
+        {"attack A with B", executeAttack},
+        {"attack A", executeAttack},
+        {"wait", executeWait},
 
         {"A", executeNoMatch}};
 

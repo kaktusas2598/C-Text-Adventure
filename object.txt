@@ -18,6 +18,8 @@ struct Object {
     int            capacity;
     int            health;
     int            light;
+    int            impact;
+    int            trust;
     void          (*open)(void);
     void          (*close)(void);
     void          (*lock)(void);
@@ -27,8 +29,27 @@ struct Object {
 typedef struct Object Object;
 extern Object objs[];
 
-- gossipEWNS
+- heaven
+     description "little heaven"
+     tags        "heaven", "little heaven"
+     details     "Everything looks so peaceful here."
+     gossip      "It's where all the good adventurers go."
+     capacity    9999
+     light       100
+- respawn
+     description "a respawn portal"
+     tags        "portal", "respawn portal"
+     location    heaven
+     destination field
+     details     "Looks like a gateway into the unknown."
+     textGo      "A bright flash of light, and you are back in the field."
+     open        isAlreadyOpen
+
+- heavenEWNS
+     description "nothing but peace and quiet"
      tags        "east", "west", "north", "south"
+     location    heaven
+     textGo      "In this dimension, there are no directions."
      gossip      "It's just a compass direction."
 
 - field
@@ -66,6 +87,7 @@ extern Object objs[];
      gossip      "Easy to bribe..."
      contents    "He has"
      health      100
+     impact      -1
      capacity    20
 - player
      description "yourself"
@@ -75,6 +97,7 @@ extern Object objs[];
      gossip      "You're not from around here, are you?"
      contents    "You have"
      health      100
+     impact      -1
      capacity    20
 - intoCave
      condition   { return guard->health == 0 || silver->location == guard; }
@@ -211,3 +234,17 @@ extern Object objs[];
      details     "The lamp is on."
      weight      5
      light       100
+- club
+     description "a wooden club"
+     tags        "club", "wooden club"
+     location    field
+     details     "Two feet of solid wood."
+     weight      5
+     impact      -2
+- dagger
+     description "a dagger"
+     tags        "dagger"
+     location    field
+     details     "The dagger is very sharp."
+     weight      7
+     impact      -5
