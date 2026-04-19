@@ -22,7 +22,6 @@ Fun little experiment building Old School text based adventure game in C, based 
   * Or alternatively run `make success.txt`
 
 # TODO
- * Fix 'quit' command stopped working after changing all commands from bool to int to return time taken
  * Rewrite more akin to my own style and add comments
  * Replace awk code generation with something better, maybe a data design based approach or perhaps Lua
  * Remove all references to actual objects in the game, maybe with the exception of the player
