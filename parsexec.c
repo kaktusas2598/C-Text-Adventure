@@ -10,6 +10,7 @@
 #include "inventory2.h" // Commands with 2 nouns
 #include "openclose.h"
 #include "onoff.h"
+#include "talk.h"
 
 typedef struct {
     const char* pattern;
@@ -57,6 +58,10 @@ bool parseAndExecute(char* input) {
         {"turn off A", executeTurnOff},
         {"turn A on", executeTurnOn},
         {"turn A off", executeTurnOff},
+        {"talk with B about A", executeTalkTo},
+        {"talk about A with B", executeTalkTo},
+        {"talk about A", executeTalk},
+        {"talk A", executeTalk},
 
         {"A", executeNoMatch}};
 

@@ -18,6 +18,7 @@ BEGIN {
    prop["details"]     = "\"You see nothing special.\"";
    prop["contents"]    = "\"You see\"";
    prop["textGo"]      = "\"You can't get much closer than this.\"";
+   prop["gossip"]      = "\"I know nothing about that.\"";
    prop["weight"]      = "99";
    prop["capacity"]    = "0";
    prop["health"]      = "0";
@@ -72,6 +73,7 @@ function outputRecord(separator)
          print "\t\t" prop["details"] ",";
          print "\t\t" prop["contents"] ",";
          print "\t\t" prop["textGo"] ",";
+         print "\t\t" prop["gossip"] ",";
          print "\t\t" prop["weight"] ",";
          print "\t\t" prop["capacity"] ",";
          print "\t\t" prop["health"] ",";
