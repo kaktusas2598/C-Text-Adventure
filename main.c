@@ -48,19 +48,36 @@ static bool processInput(char* ptr, int size) {
 
 int main(int argc, char* argv[]) {
     (void)argc;
-    // TODO: Let user specify world file on command line and print error if it fails to load.
-    if (!luaWorldLoad("world.lua")) {
-        fprintf(stderr, "Failed to load world.lua: %s\n", luaWorldGetLastError());
+    const char* worldFile = "world.lua";
+    const char* saveFile = "savefile.txt";
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-g") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "Usage: %s [-g gameFile.lua]\n", argv[0]);
+            }
+            worldFile = argv[++i];
+        } else if (strcmp(argv[i], "-s") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "Usage: %s [-s saveFile.txt]\n", argv[0]);
+                return 1;
+            }
+            saveFile = argv[++i];
+        }
+    }
+
+    if (!luaWorldLoad(worldFile)) {
+        fprintf(stderr, "Failed to load %s: %s\n", worldFile, luaWorldGetLastError());
         return 1;
     }
     if (!objectInitFromLuaWorld()) {
-        fprintf(stderr, "Failed to build runtime objects from world.lua: %s\n", objectGetLastError());
+        fprintf(stderr, "Failed to build runtime objects from %s: %s\n", worldFile, objectGetLastError());
         luaWorldUnload();
         return 1;
     }
 
     printf("Welcome to Text Adventure!\n");
-    while(processInput(input, sizeof input) && getInput(argv[1]));
+    while(processInput(input, sizeof input) && getInput(saveFile));
     printf("\nGood Bye!\n");
     objectFree();
     luaWorldUnload();
