@@ -44,15 +44,9 @@ extern Object* respawn;
 extern Object* heavenEWNS;
 extern Object* field;
 extern Object* cave;
-extern Object* silver;
-extern Object* gold;
 extern Object* guard;
 extern Object* player;
-extern Object* intoCave;
-extern Object* intoCaveBlocked;
 extern Object* exitCave;
-extern Object* wallField;
-extern Object* wallCave;
 extern Object* backroom;
 extern Object* wallBackroom;
 extern Object* openDoorToBackroom;
@@ -63,8 +57,6 @@ extern Object* openBox;
 extern Object* closedBox;
 extern Object* lockedBox;
 extern Object* keyForBox;
-extern Object* club;
-extern Object* dagger;
 
 #define validObject(obj)     ((obj) != NULL && (obj)->condition(obj))
 

@@ -23,15 +23,8 @@ Object* respawn = NULL;
 Object* heavenEWNS = NULL;
 Object* field = NULL;
 Object* cave = NULL;
-Object* silver = NULL;
-Object* gold = NULL;
 Object* guard = NULL;
 Object* player = NULL;
-Object* intoCave = NULL;
-Object* intoCaveBlocked = NULL;
-Object* exitCave = NULL;
-Object* wallField = NULL;
-Object* wallCave = NULL;
 Object* backroom = NULL;
 Object* wallBackroom = NULL;
 Object* openDoorToBackroom = NULL;
@@ -42,8 +35,6 @@ Object* openBox = NULL;
 Object* closedBox = NULL;
 Object* lockedBox = NULL;
 Object* keyForBox = NULL;
-Object* club = NULL;
-Object* dagger = NULL;
 
 
 static char lastError[512];
@@ -200,15 +191,8 @@ static bool buildCompobilityGlobal(void) {
         heavenEWNS = objectById("heavenEWNS");
         field = objectById("field");
         cave = objectById("cave");
-        silver = objectById("silver");
-        gold = objectById("gold");
         guard = objectById("guard");
         player = objectById("player");
-        intoCave = objectById("intoCave");
-        intoCaveBlocked = objectById("intoCaveBlocked");
-        exitCave = objectById("exitCave");
-        wallField = objectById("wallField");
-        wallCave = objectById("wallCave");
         backroom = objectById("backroom");
         wallBackroom = objectById("wallBackroom");
         openDoorToBackroom = objectById("openDoorToBackroom");
@@ -219,8 +203,6 @@ static bool buildCompobilityGlobal(void) {
         closedBox = objectById("closedBox");
         lockedBox = objectById("lockedBox");
         keyForBox = objectById("keyForBox");
-        club = objectById("club");
-        dagger = objectById("dagger");
 
         if (player == NULL) {
             setError("object 'player' is required to be defined in Lua game file.");
@@ -286,15 +268,8 @@ void objectFree(void) {
     heavenEWNS = NULL;
     field = NULL;
     cave = NULL;
-    silver = NULL;
-    gold = NULL;
     guard = NULL;
     player = NULL;
-    intoCave = NULL;
-    intoCaveBlocked = NULL;
-    exitCave = NULL;
-    wallField = NULL;
-    wallCave = NULL;
     backroom = NULL;
     wallBackroom = NULL;
     openDoorToBackroom = NULL;
@@ -305,8 +280,6 @@ void objectFree(void) {
     closedBox = NULL;
     lockedBox = NULL;
     keyForBox = NULL;
-    club = NULL;
-    dagger = NULL;
 }
 
 const char* objectGetLastError(void) {
