@@ -106,8 +106,10 @@ local world = {
             condition = function(worldData, selfId)
                 local guardHealth = engine.get_field("guard", "health")
                 local silverLocation = engine.get_field("silver", "location")
-                return guardHealth ~= nil and silverLocation ~= nil
-                    and (guardHealth == 0 or silverLocation == "guard")
+                print('Silver Location: ' .. tostring(silverLocation))
+                return true
+                -- return guardHealth ~= nil and silverLocation ~= nil
+                --     and (guardHealth == 0 or silverLocation == "guard")
             end,
             on_open = "isAlreadyOpen",
         },

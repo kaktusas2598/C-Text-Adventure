@@ -48,15 +48,16 @@ static bool processInput(char* ptr, int size) {
 
 int main(int argc, char* argv[]) {
     (void)argc;
+    // TODO: Let user specify world file on command line and print error if it fails to load.
     if (!luaWorldLoad("world.lua")) {
         fprintf(stderr, "Failed to load world.lua: %s\n", luaWorldGetLastError());
         return 1;
     }
-    // if (!objectInitFromLuaWorld()) {
-    //     fprintf(stderr, "Failed to build runtime objects from world.lua.\n");
-    //     luaWorldUnload();
-    //     return 1;
-    // }
+    if (!objectInitFromLuaWorld()) {
+        fprintf(stderr, "Failed to build runtime objects from world.lua: %s\n", objectGetLastError());
+        luaWorldUnload();
+        return 1;
+    }
 
     printf("Welcome to Text Adventure!\n");
     while(processInput(input, sizeof input) && getInput(argv[1]));
