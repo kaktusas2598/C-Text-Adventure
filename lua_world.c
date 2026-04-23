@@ -46,6 +46,8 @@ static void freeObject(LuaWorldObject* object) {
     free(object->location);
     free(object->destination);
     free(object->prospect);
+    free(object->deathDestination);
+    free(object->dropDestination);
     free(object->togglesTo);
     free(object->mirrorsTo);
     free(object->locksTo);
@@ -312,6 +314,8 @@ static bool loadObject(lua_State* lua, int index, const char* fallbackId, LuaWor
         !setStringField(lua, index, "location", &object->location) ||
         !setStringField(lua, index, "destination", &object->destination) ||
         !setStringField(lua, index, "prospect", &object->prospect) ||
+        !setStringField(lua, index, "death_destination", &object->deathDestination) ||
+        !setStringField(lua, index, "drop_destination", &object->dropDestination) ||
         !setStringField(lua, index, "toggles_to", &object->togglesTo) ||
         !setStringField(lua, index, "mirrors_to", &object->mirrorsTo) ||
         !setStringField(lua, index, "locks_to", &object->locksTo) ||

@@ -37,6 +37,8 @@ typedef struct LuaWorldObject {
     int light;
     int impact;
     int trust;
+    char* deathDestination; // Optional field for where the player should be moved to when they die
+    char* dropDestination;  // Optional field for where the player's objects should be moved to when they die
 } LuaWorldObject;
 
 typedef struct {

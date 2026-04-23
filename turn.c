@@ -45,10 +45,18 @@ bool turn(int time) {
         }
         if (player->health <= 0) {
             printf("You have died!\n");
-            player->location = heaven;
-            player->health = 100;
-            for (obj = objs; obj < endOfObjs; obj++) {
-                if (obj->location == player) obj->location = field;
+            if (player->deathDestination != NULL) {
+                player->location = player->deathDestination;
+                player->health = 100;
+
+                if (player->dropDestination != NULL) {
+                    for (obj = objs; obj < endOfObjs; obj++) {
+                        if (obj->location == player) obj->location = player->dropDestination;
+                    }
+                }
+            } else {
+                printf("Better luck next time!\n");
+                return false;
             }
         }
         if (originallyLit != isLit(player->location) || originalLocation != player->location) {

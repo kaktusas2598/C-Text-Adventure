@@ -17,11 +17,7 @@ static const int defaultWeight = 99;
 
 Object* objs = NULL;
 Object* endOfObjs = NULL;
-
-Object* heaven = NULL;
-Object* field = NULL;
 Object* player = NULL;
-
 
 static char lastError[512];
 
@@ -120,6 +116,8 @@ static bool populateObject(Object* object, const char* id) {
     object->mirrorsTo = NULL;
     object->locksTo = NULL;
     object->key = NULL;
+    object->deathDestination = NULL;
+    object->dropDestination = NULL;
     object->capacity = source->capacity;
     object->health = source->health;
     object->light = source->light;
@@ -165,6 +163,8 @@ static bool resolveReferences(void) {
             !resolveReference(&object->mirrorsTo, object->id, "mirrors_to", source->mirrorsTo) ||
             !resolveReference(&object->locksTo, object->id, "locks_to", source->locksTo) ||
             !resolveReference(&object->key, object->id, "key_id", source->keyId) ||
+            !resolveReference(&object->deathDestination, object->id, "death_destination", source->deathDestination) ||
+            !resolveReference(&object->dropDestination, object->id, "drop_destination", source->dropDestination) ||
             !resolveReference(
                 &object->prospect,
                 object->id,
@@ -176,19 +176,6 @@ static bool resolveReferences(void) {
     }
 
     return true;
-}
-
-static bool buildCompobilityGlobal(void) {
-        heaven = objectById("heaven");
-        field = objectById("field");
-        player = objectById("player");
-
-        if (player == NULL) {
-            setError("object 'player' is required to be defined in Lua game file.");
-            return false;
-        }
-
-        return true;
 }
 
 bool objectInitFromLuaWorld(void) {
@@ -226,9 +213,11 @@ bool objectInitFromLuaWorld(void) {
         return false;
     }
 
-    // TODO: remove this hacky compatibility global builder and instead use actual lua world in engine code where needed
-    if (!buildCompobilityGlobal()) {
+    // Resolve required objects, for now only player is required to be defined
+    player = objectById("player");
+    if (player == NULL) {
         objectFree();
+        setError("object 'player' is required to be defined in Lua game file.");
         return false;
     }
 
@@ -240,9 +229,6 @@ void objectFree(void) {
 
     objs = NULL;
     endOfObjs = NULL;
-
-    heaven = NULL;
-    field = NULL;
     player = NULL;
 }
 

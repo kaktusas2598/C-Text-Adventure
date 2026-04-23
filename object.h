@@ -19,6 +19,9 @@ struct Object {
     Object* destination;
     Object* prospect; // Optional field for objects that have a different prospect than destination, e.g. a door that leads to a different location than it prospects
 
+    Object *deathDestination; // Optional field for where the player should be moved to when they die
+    Object* dropDestination;  // Optional field for where the player's objects should be moved to when they die
+
     Object* togglesTo; // Optional alternate state, e.g. lamp on/off or box open/closed
     Object* mirrorsTo; // Optional linked state on the other side, e.g. paired doors
     Object* locksTo;   // Optional locked/unlocked state partner
@@ -47,10 +50,6 @@ struct Object {
 
 extern Object* objs;
 extern Object* endOfObjs;
-
-// TODO: this is for temporary compability, remove later
-extern Object* heaven;
-extern Object* field;
 extern Object* player;
 
 #define validObject(obj)     ((obj) != NULL && (obj)->condition(obj))

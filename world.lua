@@ -92,6 +92,9 @@ local world = {
             health = 100,
             capacity = 20,
             impact = -1,
+            -- For permadeath, remove these
+            death_destination = "heaven",
+            drop_destination = "field",
         },
         intoCave = {
             kind = "passage",

@@ -22,18 +22,17 @@ Fun little experiment started with building Old School text based adventure game
   * Or alternatively run `make success.txt`
 
 # TODO
- * Rewrite more akin to my own style and add comments
- * Remove all references to actual objects in the game, maybe with the exception of the player
+ * Add more comments in engine layer
  * Possibly savegame could be serialised state instead of command replay however not sure if this is worth it for such a simple single player game?
- * Load every object/location/item from Lua.
- * Replace hard-coded object macros with lookups by `id`.
- * Replace direct function pointers with named Lua or C-registered behaviors.
 
 # Defining a game using Lua fiels
 
- * To implement game, create Lua file (or multiple ones) as per example below and run using `./textAdventure.exe -o myGame.lua`
+ * To implement game, create Lua file (or multiple ones) as per example below and run using `./textAdventure.exe -g myGame.lua`
 
 # Example of game definition
+
+Simple example, "player" is the only required object which needs to be defined by lua file.
+
 ```lua
 return {
     objects = {
