@@ -19,8 +19,6 @@ Object* objs = NULL;
 Object* endOfObjs = NULL;
 
 Object* heaven = NULL;
-Object* respawn = NULL;
-Object* heavenEWNS = NULL;
 Object* field = NULL;
 Object* cave = NULL;
 Object* guard = NULL;
@@ -185,8 +183,6 @@ static bool resolveReferences(void) {
 
 static bool buildCompobilityGlobal(void) {
         heaven = objectById("heaven");
-        respawn = objectById("respawn");
-        heavenEWNS = objectById("heavenEWNS");
         field = objectById("field");
         cave = objectById("cave");
         guard = objectById("guard");
@@ -260,8 +256,6 @@ void objectFree(void) {
     endOfObjs = NULL;
 
     heaven = NULL;
-    respawn = NULL;
-    heavenEWNS = NULL;
     field = NULL;
     cave = NULL;
     guard = NULL;

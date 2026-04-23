@@ -40,8 +40,6 @@ extern Object* endOfObjs;
 
 // TODO: this is for temporary compability, remove later
 extern Object* heaven;
-extern Object* respawn;
-extern Object* heavenEWNS;
 extern Object* field;
 extern Object* cave;
 extern Object* guard;
