@@ -4,46 +4,75 @@
 #include "misc.h"
 #include "location.h"
 
-static void swapLocations(const char* verb1, Object* obj1, const char* verb2, Object* obj2) {
-    Object* tmp = obj1->location;
-    Object* obj = tmp != NULL ? obj1 : obj2;
-    const char* verb = tmp != NULL ? verb1 : verb2;
-    obj1->location = obj2->location;
-    obj2->location = tmp;
-    if (verb != NULL) printf("You %s %s.\n", verb, obj->description);
+static void swapStates(const char* verb, Object* current, Object* other) {
+    Object* tmp = current->location;
+    current->location = other->location;
+    other->location = tmp;
+    if (verb != NULL) printf("You %s %s.\n", verb, current->description);
 }
 
-void cannotBeOpened(void)    { printf("That cannot be opened.\n");    }
-void cannotBeClosed(void)    { printf("That cannot be closed.\n");    }
-void cannotBeLocked(void)    { printf("That cannot be locked.\n");    }
-void cannotBeUnlocked(void)  { printf("That cannot be unlocked.\n");  }
-void isAlreadyOpen(void)     { printf("That is already open.\n");     }
-void isAlreadyClosed(void)   { printf("That is already closed.\n");   }
-void isAlreadyLocked(void)   { printf("That is already locked.\n");   }
-void isAlreadyUnlocked(void) { printf("That is already unlocked.\n"); }
-void isStillOpen(void)       { printf("That is still open.\n");       }
-void isStillLocked(void)     { printf("That is locked.\n");           }
 
-void toggleDoorToBackroom(void) {
-    swapLocations(NULL, openDoorToCave, NULL, closedDoorToCave);
-    swapLocations("close", openDoorToBackroom, "open", closedDoorToBackroom);
+void cannotBeOpened(Object* obj)    { (void)obj; printf("That cannot be opened.\n");    }
+void cannotBeClosed(Object* obj)    { (void)obj; printf("That cannot be closed.\n");    }
+void cannotBeLocked(Object* obj)    { (void)obj; printf("That cannot be locked.\n");    }
+void cannotBeUnlocked(Object* obj)  { (void)obj; printf("That cannot be unlocked.\n");  }
+void isAlreadyOpen(Object* obj)     { (void)obj; printf("That is already open.\n");     }
+void isAlreadyClosed(Object* obj)   { (void)obj; printf("That is already closed.\n");   }
+void isAlreadyLocked(Object* obj)   { (void)obj; printf("That is already locked.\n");   }
+void isAlreadyUnlocked(Object* obj) { (void)obj; printf("That is already unlocked.\n"); }
+void isStillOpen(Object* obj)       { (void)obj; printf("That is still open.\n");       }
+void isStillLocked(Object* obj)     { (void)obj; printf("That is locked.\n");           }
+
+static bool playerHasKeyFor(Object* lockedObject) {
+    return lockedObject->key != NULL && lockedObject->key->location == player;
 }
 
-void toggleDoorToCave(void) {
-    swapLocations(NULL, openDoorToBackroom, NULL, closedDoorToBackroom);
-    swapLocations("close", openDoorToCave, "open", closedDoorToCave);
-}
-
-void toggleBox(void) {
-    swapLocations("close", openBox, "open", closedBox);
-}
-
-void toggleBoxLock(void) {
-    if (keyForBox->location == player) {
-        swapLocations("lock", closedBox, "unlock", lockedBox);
-    } else {
-        printf("You don't have the key for that.\n");
+static void syncMirror(Object* obj) {
+    if (obj->mirrorsTo != NULL && obj->mirrorsTo->togglesTo != NULL) {
+        swapStates(NULL, obj->mirrorsTo, obj->mirrorsTo->togglesTo);
     }
+}
+
+void openViaToggle(Object* obj) {
+    if (obj == NULL || obj->togglesTo == NULL) {
+        cannotBeOpened(obj);
+        return;
+    }
+    syncMirror(obj);
+    swapStates("open", obj, obj->togglesTo);
+}
+
+void closeViaToggle(Object* obj) {
+    if (obj == NULL || obj->togglesTo == NULL) {
+        cannotBeClosed(obj);
+        return;
+    }
+    syncMirror(obj);
+    swapStates("close", obj, obj->togglesTo);
+}
+
+void lockViaToggle(Object* obj) {
+    if (obj == NULL || obj->locksTo == NULL) {
+        cannotBeLocked(obj);
+        return;
+    }
+    if (!playerHasKeyFor(obj)) {
+        printf("You don't have the key for that.\n");
+        return;
+    }
+    swapStates("lock", obj, obj->locksTo);
+}
+
+void unlockViaToggle(Object* obj) {
+    if (obj == NULL || obj->locksTo == NULL) {
+        cannotBeUnlocked(obj);
+        return;
+    }
+    if (!playerHasKeyFor(obj)) {
+        printf("You don't have the key for that.\n");
+        return;
+    }
+    swapStates("unlock", obj, obj->locksTo);
 }
 
 void toggleObject(Object* obj) {
@@ -58,7 +87,7 @@ void toggleObject(Object* obj) {
     other = obj->togglesTo;
     oldLit = isLit(player->location);
 
-    swapLocations("turn off", obj, "turn on", other);
+    swapStates(obj->light > 0 ? "turn off" : "turn on", obj, other);
     if (oldLit != isLit(player->location)) {
         printf("\n");
         executeLookAround();

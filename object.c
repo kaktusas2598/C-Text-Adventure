@@ -23,14 +23,6 @@ Object* field = NULL;
 Object* cave = NULL;
 Object* guard = NULL;
 Object* player = NULL;
-Object* openDoorToBackroom = NULL;
-Object* closedDoorToBackroom = NULL;
-Object* openDoorToCave = NULL;
-Object* closedDoorToCave = NULL;
-Object* openBox = NULL;
-Object* closedBox = NULL;
-Object* lockedBox = NULL;
-Object* keyForBox = NULL;
 
 
 static char lastError[512];
@@ -80,10 +72,11 @@ static ObjectAction resolveAction(const char* name, ObjectAction fallback) {
     if (strcmp(name, "isAlreadyUnlocked") == 0) return isAlreadyUnlocked;
     if (strcmp(name, "isStillOpen") == 0) return isStillOpen;
     if (strcmp(name, "isStillLocked") == 0) return isStillLocked;
-    if (strcmp(name, "toggleDoorToBackroom") == 0) return toggleDoorToBackroom;
-    if (strcmp(name, "toggleDoorToCave") == 0) return toggleDoorToCave;
-    if (strcmp(name, "toggleBox") == 0) return toggleBox;
-    if (strcmp(name, "toggleBoxLock") == 0) return toggleBoxLock;
+    if (strcmp(name, "openViaToggle") == 0) return openViaToggle;
+    if (strcmp(name, "closeViaToggle") == 0) return closeViaToggle;
+    if (strcmp(name, "lockViaToggle") == 0) return lockViaToggle;
+    if (strcmp(name, "unlockViaToggle") == 0) return unlockViaToggle;
+    
 
     setError("unknown object action '%s'", name);
     fprintf(stderr, "%s.\n", lastError);
@@ -126,6 +119,9 @@ static bool populateObject(Object* object, const char* id) {
     object->gossip = source->gossip != NULL ? source->gossip : defaultGossip;
     object->weight = source->weight != 0 ? source->weight : defaultWeight;
     object->togglesTo = NULL;
+    object->mirrorsTo = NULL;
+    object->locksTo = NULL;
+    object->key = NULL;
     object->capacity = source->capacity;
     object->health = source->health;
     object->light = source->light;
@@ -168,6 +164,9 @@ static bool resolveReferences(void) {
         if (!resolveReference(&object->location, object->id, "location", source->location) ||
             !resolveReference(&object->destination, object->id, "destination", source->destination) ||
             !resolveReference(&object->togglesTo, object->id, "toggles_to", source->togglesTo) ||
+            !resolveReference(&object->mirrorsTo, object->id, "mirrors_to", source->mirrorsTo) ||
+            !resolveReference(&object->locksTo, object->id, "locks_to", source->locksTo) ||
+            !resolveReference(&object->key, object->id, "key_id", source->keyId) ||
             !resolveReference(
                 &object->prospect,
                 object->id,
@@ -187,14 +186,6 @@ static bool buildCompobilityGlobal(void) {
         cave = objectById("cave");
         guard = objectById("guard");
         player = objectById("player");
-        openDoorToBackroom = objectById("openDoorToBackroom");
-        closedDoorToBackroom = objectById("closedDoorToBackroom");
-        openDoorToCave = objectById("openDoorToCave");
-        closedDoorToCave = objectById("closedDoorToCave");
-        openBox = objectById("openBox");
-        closedBox = objectById("closedBox");
-        lockedBox = objectById("lockedBox");
-        keyForBox = objectById("keyForBox");
 
         if (player == NULL) {
             setError("object 'player' is required to be defined in Lua game file.");
@@ -260,14 +251,6 @@ void objectFree(void) {
     cave = NULL;
     guard = NULL;
     player = NULL;
-    openDoorToBackroom = NULL;
-    closedDoorToBackroom = NULL;
-    openDoorToCave = NULL;
-    closedDoorToCave = NULL;
-    openBox = NULL;
-    closedBox = NULL;
-    lockedBox = NULL;
-    keyForBox = NULL;
 }
 
 const char* objectGetLastError(void) {

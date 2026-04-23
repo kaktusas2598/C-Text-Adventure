@@ -20,6 +20,9 @@ typedef struct LuaWorldObject {
     char* condition;
     int conditionRef;
     char* togglesTo;
+    char* mirrorsTo;
+    char* locksTo;
+    char* keyId;
     char* onOpen;
     int onOpenRef;
     char* onClose;
