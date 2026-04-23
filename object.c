@@ -42,8 +42,6 @@ Object* openBox = NULL;
 Object* closedBox = NULL;
 Object* lockedBox = NULL;
 Object* keyForBox = NULL;
-Object* lampOff = NULL;
-Object* lampOn = NULL;
 Object* club = NULL;
 Object* dagger = NULL;
 
@@ -99,7 +97,6 @@ static ObjectAction resolveAction(const char* name, ObjectAction fallback) {
     if (strcmp(name, "toggleDoorToCave") == 0) return toggleDoorToCave;
     if (strcmp(name, "toggleBox") == 0) return toggleBox;
     if (strcmp(name, "toggleBoxLock") == 0) return toggleBoxLock;
-    if (strcmp(name, "toggleLamp") == 0) return toggleLamp;
 
     setError("unknown object action '%s'", name);
     fprintf(stderr, "%s.\n", lastError);
@@ -141,6 +138,7 @@ static bool populateObject(Object* object, const char* id) {
     object->textGo = source->textGo != NULL ? source->textGo : defaultTextGo;
     object->gossip = source->gossip != NULL ? source->gossip : defaultGossip;
     object->weight = source->weight != 0 ? source->weight : defaultWeight;
+    object->togglesTo = NULL;
     object->capacity = source->capacity;
     object->health = source->health;
     object->light = source->light;
@@ -182,6 +180,7 @@ static bool resolveReferences(void) {
 
         if (!resolveReference(&object->location, object->id, "location", source->location) ||
             !resolveReference(&object->destination, object->id, "destination", source->destination) ||
+            !resolveReference(&object->togglesTo, object->id, "toggles_to", source->togglesTo) ||
             !resolveReference(
                 &object->prospect,
                 object->id,
@@ -220,8 +219,6 @@ static bool buildCompobilityGlobal(void) {
         closedBox = objectById("closedBox");
         lockedBox = objectById("lockedBox");
         keyForBox = objectById("keyForBox");
-        lampOff = objectById("lampOff");
-        lampOn = objectById("lampOn");
         club = objectById("club");
         dagger = objectById("dagger");
 
@@ -308,8 +305,6 @@ void objectFree(void) {
     closedBox = NULL;
     lockedBox = NULL;
     keyForBox = NULL;
-    lampOff = NULL;
-    lampOn = NULL;
     club = NULL;
     dagger = NULL;
 }

@@ -16,17 +16,18 @@ struct Object {
     const char** tags;
     Object* location;
     Object* destination;
-    Object* prospect;
+    Object* prospect; // Optional field for objects that have a different prospect than destination, e.g. a door that leads to a different location than it prospects
+    Object *togglesTo; // Optional for switchale objects like lamps
     const char* details;
     const char* contents;
-    const char* textGo;
+    const char* textGo; // Optional text to show when player tries to go to this object, e.g. "You can't go there, it's a wall."
     const char* gossip;
     int weight;
     int capacity;
     int health;
     int light;
-    int impact;
-    int trust;
+    int impact; // Optional field for attackable objects that determines how much damage they deal when attacking the player, or how much damage they take when attacked by the player
+    int trust; // Optional field for talkable objects that determines how much they trust the player, which can be used to gate certain actions or dialogue options
     ObjectAction open;
     ObjectAction close;
     ObjectAction lock;
@@ -62,8 +63,6 @@ extern Object* openBox;
 extern Object* closedBox;
 extern Object* lockedBox;
 extern Object* keyForBox;
-extern Object* lampOff;
-extern Object* lampOn;
 extern Object* club;
 extern Object* dagger;
 

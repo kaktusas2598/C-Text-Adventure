@@ -46,9 +46,19 @@ void toggleBoxLock(void) {
     }
 }
 
-void toggleLamp(void) {
-    bool oldLit = isLit(player->location);
-    swapLocations("turn off", lampOn, "turn on", lampOff);
+void toggleObject(Object* obj) {
+    bool oldLit;
+    Object* other;
+
+    if (obj == NULL || obj->togglesTo == NULL) {
+        printf("You cannot toggle that.\n");
+        return;
+    }
+
+    other = obj->togglesTo;
+    oldLit = isLit(player->location);
+
+    swapLocations("turn off", obj, "turn on", other);
     if (oldLit != isLit(player->location)) {
         printf("\n");
         executeLookAround();

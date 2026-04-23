@@ -1,3 +1,9 @@
+#ifndef TOGGLE_H
+#define TOGGLE_H
+
+// Forward declaration of Object struct to avoid circular dependency with object.h
+typedef struct Object Object;
+
 extern void cannotBeOpened(void);
 extern void cannotBeClosed(void);
 extern void cannotBeLocked(void);
@@ -16,4 +22,7 @@ extern void toggleDoorToCave(void);
 extern void toggleBox(void);
 extern void toggleBoxLock(void);
 
-extern void toggleLamp(void);
+// For e.g.: Lamps: 2 objects one with light and other without with togglesTo attribute
+extern void toggleObject(Object* obj);
+
+#endif
