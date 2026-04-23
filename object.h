@@ -51,8 +51,6 @@ extern Object* endOfObjs;
 // TODO: this is for temporary compability, remove later
 extern Object* heaven;
 extern Object* field;
-extern Object* cave;
-extern Object* guard;
 extern Object* player;
 
 #define validObject(obj)     ((obj) != NULL && (obj)->condition(obj))

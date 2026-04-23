@@ -20,8 +20,6 @@ Object* endOfObjs = NULL;
 
 Object* heaven = NULL;
 Object* field = NULL;
-Object* cave = NULL;
-Object* guard = NULL;
 Object* player = NULL;
 
 
@@ -183,8 +181,6 @@ static bool resolveReferences(void) {
 static bool buildCompobilityGlobal(void) {
         heaven = objectById("heaven");
         field = objectById("field");
-        cave = objectById("cave");
-        guard = objectById("guard");
         player = objectById("player");
 
         if (player == NULL) {
@@ -240,7 +236,6 @@ bool objectInitFromLuaWorld(void) {
 }
 
 void objectFree(void) {
-    // memset(objs, 0, sizeof objs);
     free(objs);
 
     objs = NULL;
@@ -248,8 +243,6 @@ void objectFree(void) {
 
     heaven = NULL;
     field = NULL;
-    cave = NULL;
-    guard = NULL;
     player = NULL;
 }
 
