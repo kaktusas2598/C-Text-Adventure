@@ -363,7 +363,7 @@ bool luaWorldLoad(const char* filename) {
 
     lua_pushvalue(lua, -1);
     worldRef = luaL_ref(lua, LUA_REGISTRYINDEX);
-    luaRegisterEngineBindings(lua, worldRef);
+    registerEngineBindings(lua, worldRef);
 
     lua_getfield(lua, -1, "objects");
     if (!lua_istable(lua, -1)) {

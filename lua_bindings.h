@@ -3,6 +3,6 @@
 
 #include <lua.h>
 
-void luaRegisterEngineBindings(lua_State* lua, int worldRef);
+void registerEngineBindings(lua_State* lua, int worldRef);
 
 #endif
