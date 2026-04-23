@@ -25,8 +25,6 @@ Object* field = NULL;
 Object* cave = NULL;
 Object* guard = NULL;
 Object* player = NULL;
-Object* backroom = NULL;
-Object* wallBackroom = NULL;
 Object* openDoorToBackroom = NULL;
 Object* closedDoorToBackroom = NULL;
 Object* openDoorToCave = NULL;
@@ -193,8 +191,6 @@ static bool buildCompobilityGlobal(void) {
         cave = objectById("cave");
         guard = objectById("guard");
         player = objectById("player");
-        backroom = objectById("backroom");
-        wallBackroom = objectById("wallBackroom");
         openDoorToBackroom = objectById("openDoorToBackroom");
         closedDoorToBackroom = objectById("closedDoorToBackroom");
         openDoorToCave = objectById("openDoorToCave");
@@ -270,8 +266,6 @@ void objectFree(void) {
     cave = NULL;
     guard = NULL;
     player = NULL;
-    backroom = NULL;
-    wallBackroom = NULL;
     openDoorToBackroom = NULL;
     closedDoorToBackroom = NULL;
     openDoorToCave = NULL;
