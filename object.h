@@ -34,39 +34,38 @@ struct Object {
     const LuaWorldObject* luaObject;
 };
 
-extern Object objs[];
+extern Object* objs;
+extern Object* endOfObjs;
 
-// TODO: We definately WANT TO DESTROY THIS SHIT
-#define heaven               (objs + 0)
-#define respawn              (objs + 1)
-#define heavenEWNS           (objs + 2)
-#define field                (objs + 3)
-#define cave                 (objs + 4)
-#define silver               (objs + 5)
-#define gold                 (objs + 6)
-#define guard                (objs + 7)
-#define player               (objs + 8)
-#define intoCave             (objs + 9)
-#define intoCaveBlocked      (objs + 10)
-#define exitCave             (objs + 11)
-#define wallField            (objs + 12)
-#define wallCave             (objs + 13)
-#define backroom             (objs + 14)
-#define wallBackroom         (objs + 15)
-#define openDoorToBackroom   (objs + 16)
-#define closedDoorToBackroom (objs + 17)
-#define openDoorToCave       (objs + 18)
-#define closedDoorToCave     (objs + 19)
-#define openBox              (objs + 20)
-#define closedBox            (objs + 21)
-#define lockedBox            (objs + 22)
-#define keyForBox            (objs + 23)
-#define lampOff              (objs + 24)
-#define lampOn               (objs + 25)
-#define club                 (objs + 26)
-#define dagger               (objs + 27)
-
-#define endOfObjs            (objs + 28)
+// TODO: this is for temporary compability, remove later
+extern Object* heaven;
+extern Object* respawn;
+extern Object* heavenEWNS;
+extern Object* field;
+extern Object* cave;
+extern Object* silver;
+extern Object* gold;
+extern Object* guard;
+extern Object* player;
+extern Object* intoCave;
+extern Object* intoCaveBlocked;
+extern Object* exitCave;
+extern Object* wallField;
+extern Object* wallCave;
+extern Object* backroom;
+extern Object* wallBackroom;
+extern Object* openDoorToBackroom;
+extern Object* closedDoorToBackroom;
+extern Object* openDoorToCave;
+extern Object* closedDoorToCave;
+extern Object* openBox;
+extern Object* closedBox;
+extern Object* lockedBox;
+extern Object* keyForBox;
+extern Object* lampOff;
+extern Object* lampOn;
+extern Object* club;
+extern Object* dagger;
 
 #define validObject(obj)     ((obj) != NULL && (obj)->condition(obj))
 

@@ -3,43 +3,11 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "lua_world.h"
 #include "toggle.h"
-
-
-// TODO: Dont want to reference game objects in any way apart from maybe player in engine code. This is just a temporary hack to get something working and will be replaced with a more flexible system of object management that doesn't rely on hardcoded object slots or global variables.
-static const char* objectOrder[] = {
-    "heaven",
-    "respawn",
-    "heavenEWNS",
-    "field",
-    "cave",
-    "silver",
-    "gold",
-    "guard",
-    "player",
-    "intoCave",
-    "intoCaveBlocked",
-    "exitCave",
-    "wallField",
-    "wallCave",
-    "backroom",
-    "wallBackroom",
-    "openDoorToBackroom",
-    "closedDoorToBackroom",
-    "openDoorToCave",
-    "closedDoorToCave",
-    "openBox",
-    "closedBox",
-    "lockedBox",
-    "keyForBox",
-    "lampOff",
-    "lampOn",
-    "club",
-    "dagger"
-};
 
 static const char* defaultContents = "You see";
 static const char* defaultDetails = "You see nothing special.";
@@ -47,7 +15,39 @@ static const char* defaultTextGo = "You can't get much closer than this.";
 static const char* defaultGossip = "I know nothing about that.";
 static const int defaultWeight = 99;
 
-Object objs[sizeof objectOrder / sizeof objectOrder[0]];
+Object* objs = NULL;
+Object* endOfObjs = NULL;
+
+Object* heaven = NULL;
+Object* respawn = NULL;
+Object* heavenEWNS = NULL;
+Object* field = NULL;
+Object* cave = NULL;
+Object* silver = NULL;
+Object* gold = NULL;
+Object* guard = NULL;
+Object* player = NULL;
+Object* intoCave = NULL;
+Object* intoCaveBlocked = NULL;
+Object* exitCave = NULL;
+Object* wallField = NULL;
+Object* wallCave = NULL;
+Object* backroom = NULL;
+Object* wallBackroom = NULL;
+Object* openDoorToBackroom = NULL;
+Object* closedDoorToBackroom = NULL;
+Object* openDoorToCave = NULL;
+Object* closedDoorToCave = NULL;
+Object* openBox = NULL;
+Object* closedBox = NULL;
+Object* lockedBox = NULL;
+Object* keyForBox = NULL;
+Object* lampOff = NULL;
+Object* lampOn = NULL;
+Object* club = NULL;
+Object* dagger = NULL;
+
+
 static char lastError[512];
 
 static void setError(const char* fmt, ...) {
@@ -122,44 +122,10 @@ Object* objectById(const char* id) {
     return NULL;
 }
 
-static bool objectIdIsExpected(const char* id) {
-    size_t i;
-
-    for (i = 0; i < sizeof objectOrder / sizeof objectOrder[0]; i++) {
-        if (strcmp(objectOrder[i], id) == 0) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-static bool validateWorldCoverage(void) {
-    const LuaWorld* luaWorld = luaWorldGet();
-    size_t i;
-
-    if (luaWorld->count != sizeof objectOrder / sizeof objectOrder[0]) {
-        setError(
-            "world.lua defines %zu objects but the engine currently expects %zu named slots",
-            luaWorld->count,
-            sizeof objectOrder / sizeof objectOrder[0]
-        );
-        return false;
-    }
-
-    for (i = 0; i < luaWorld->count; i++) {
-        if (!objectIdIsExpected(luaWorld->objects[i].id)) {
-            setError("world.lua defines unsupported object '%s'", luaWorld->objects[i].id);
-            return false;
-        }
-    }
-
-    return true;
-}
-
 static bool populateObject(Object* object, const char* id) {
     const LuaWorldObject* source = luaWorldFind(id);
 
+    // TODO: remove hardcoded world.lua here and instead use game file from main.c but dont include main.c here!
     if (source == NULL) {
         setError("missing object '%s' in world.lua", id);
         return false;
@@ -229,24 +195,81 @@ static bool resolveReferences(void) {
     return true;
 }
 
+static bool buildCompobilityGlobal(void) {
+        heaven = objectById("heaven");
+        respawn = objectById("respawn");
+        heavenEWNS = objectById("heavenEWNS");
+        field = objectById("field");
+        cave = objectById("cave");
+        silver = objectById("silver");
+        gold = objectById("gold");
+        guard = objectById("guard");
+        player = objectById("player");
+        intoCave = objectById("intoCave");
+        intoCaveBlocked = objectById("intoCaveBlocked");
+        exitCave = objectById("exitCave");
+        wallField = objectById("wallField");
+        wallCave = objectById("wallCave");
+        backroom = objectById("backroom");
+        wallBackroom = objectById("wallBackroom");
+        openDoorToBackroom = objectById("openDoorToBackroom");
+        closedDoorToBackroom = objectById("closedDoorToBackroom");
+        openDoorToCave = objectById("openDoorToCave");
+        closedDoorToCave = objectById("closedDoorToCave");
+        openBox = objectById("openBox");
+        closedBox = objectById("closedBox");
+        lockedBox = objectById("lockedBox");
+        keyForBox = objectById("keyForBox");
+        lampOff = objectById("lampOff");
+        lampOn = objectById("lampOn");
+        club = objectById("club");
+        dagger = objectById("dagger");
+
+        if (player == NULL) {
+            setError("object 'player' is required to be defined in Lua game file.");
+            return false;
+        }
+
+        return true;
+}
+
 bool objectInitFromLuaWorld(void) {
+    const LuaWorld* luaWorld;
     size_t i;
 
     objectFree();
     lastError[0] = '\0';
 
-    if (!validateWorldCoverage()) {
+    luaWorld = luaWorldGet();
+    if (luaWorld == NULL) {
+        setError("Lua world is not loaded");
         return false;
     }
 
-    for (i = 0; i < sizeof objectOrder / sizeof objectOrder[0]; i++) {
-        if (!populateObject(&objs[i], objectOrder[i])) {
+    // Dynamically allocate memory in engine for all objects defined by Lua game file
+    objs = calloc(luaWorld->count, sizeof *objs);
+    if (luaWorld->count > 0 && objs == NULL) {
+        setError("Failed to allocate %zu runtimeObjects", luaWorld->count);
+        return false;
+    }
+    endOfObjs = objs + luaWorld->count;
+
+    // Populate Object pointers from LuaWorldObjects
+    for (i = 0; i < luaWorld->count; i++) {
+        if (!populateObject(&objs[i], luaWorld->objects[i].id)) {
             objectFree();
             return false;
         }
     }
 
+    // Resolve Object pointer references (location, destination, prospect)
     if (!resolveReferences()) {
+        objectFree();
+        return false;
+    }
+
+    // TODO: remove this hacky compatibility global builder and instead use actual lua world in engine code where needed
+    if (!buildCompobilityGlobal()) {
         objectFree();
         return false;
     }
@@ -255,7 +278,40 @@ bool objectInitFromLuaWorld(void) {
 }
 
 void objectFree(void) {
-    memset(objs, 0, sizeof objs);
+    // memset(objs, 0, sizeof objs);
+    free(objs);
+
+    objs = NULL;
+    endOfObjs = NULL;
+
+    heaven = NULL;
+    respawn = NULL;
+    heavenEWNS = NULL;
+    field = NULL;
+    cave = NULL;
+    silver = NULL;
+    gold = NULL;
+    guard = NULL;
+    player = NULL;
+    intoCave = NULL;
+    intoCaveBlocked = NULL;
+    exitCave = NULL;
+    wallField = NULL;
+    wallCave = NULL;
+    backroom = NULL;
+    wallBackroom = NULL;
+    openDoorToBackroom = NULL;
+    closedDoorToBackroom = NULL;
+    openDoorToCave = NULL;
+    closedDoorToCave = NULL;
+    openBox = NULL;
+    closedBox = NULL;
+    lockedBox = NULL;
+    keyForBox = NULL;
+    lampOff = NULL;
+    lampOn = NULL;
+    club = NULL;
+    dagger = NULL;
 }
 
 const char* objectGetLastError(void) {

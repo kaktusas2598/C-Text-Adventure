@@ -49,7 +49,7 @@ static bool processInput(char* ptr, int size) {
 int main(int argc, char* argv[]) {
     (void)argc;
     const char* worldFile = "world.lua";
-    const char* saveFile = "savefile.txt";
+    const char* saveFile = NULL;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-g") == 0) {
