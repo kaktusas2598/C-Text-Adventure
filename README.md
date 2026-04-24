@@ -24,6 +24,7 @@ Fun little experiment started with building Old School text based adventure game
 # TODO
  * Add more comments in engine layer
  * Possibly savegame could be serialised state instead of command replay however not sure if this is worth it for such a simple single player game?
+ * Simplify tags system?
 
 # Defining a game using Lua fiels
 
@@ -36,15 +37,41 @@ Simple example, "player" is the only required object which needs to be defined b
 ```lua
 return {
     objects = {
-        {
-            id = "guard",
-            kind = "actor",
-            description = "a burly guard",
-            tags = { "guard", "burly guard" },
+        field = {
+            kind = "location",
+            description = "an open field",
+            tags = { "field" },
+            details = "The field is a nice and quiet place under a clear blue sky.",
+            contents = "You see",
+            gossip = "A lot of tourists go there.",
+            capacity = 9999,
+            light = 100,
+        },
+        silver = {
+            kind = "item",
+            description = "a silver coin",
+            tags = { "silver", "coin", "silver coin" },
             location = "field",
+            details = "The coin has an eagle on the obverse.",
+            contents = "You see",
+            gossip = "Money makes the world go round...",
+            weight = 1,
+        },
+        -- Mandatory to define in world!
+        player = {
+            kind = "actor",
+            description = "yourself",
+            tags = { "yourself" },
+            location = "field",
+            details = "You would need a mirror to look at yourself.",
+            contents = "You have",
+            gossip = "You're not from around here, are you?",
             health = 100,
-            condition = "some_named_condition",
-            on_open = "some_named_action",
+            capacity = 20,
+            impact = -1,
+            -- For permadeath, remove these
+            death_destination = "heaven",
+            drop_destination = "field",
         },
     },
 }

@@ -7,6 +7,8 @@
 #include "turn.h"
 #include "lua_world.h"
 
+#include "colour.h"
+
 static char input[100] = "look around";
 
 static bool getFromFP(FILE* fp) {
@@ -48,6 +50,9 @@ static bool processInput(char* ptr, int size) {
 
 int main(int argc, char* argv[]) {
     (void)argc;
+
+    initColours();
+
     const char* worldFile = "world.lua";
     const char* saveFile = NULL;
 
