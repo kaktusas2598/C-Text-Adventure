@@ -21,6 +21,7 @@ static void setError(const char* fmt, ...) {
     va_end(args);
 }
 
+// Used for copying Lua strings because runtime object data outlives stack usage
 static char* dupString(const char* src) {
     size_t size;
     char* copy;
@@ -148,6 +149,7 @@ static bool setStringField(lua_State* lua, int index, const char* key, char** de
     return true;
 }
 
+// Either a named string or lua runction reference
 static bool setBehaviorField(lua_State* lua, int index, const char* key, char** nameDest, int* refDest) {
     const char* value;
 
@@ -263,6 +265,7 @@ static bool validateObject(const LuaWorldObject* object, size_t index) {
 static size_t countNamedObjects(lua_State* lua, int index) {
     size_t count = 0;
 
+    // ???
     lua_pushnil(lua);
     while (lua_next(lua, index) != 0) {
         if (lua_type(lua, -2) == LUA_TSTRING && lua_istable(lua, -1)) {
@@ -290,6 +293,7 @@ static bool validateUniqueIds(void) {
     return true;
 }
 
+// Objet can be loaded either using explicit "id" field or from the table key
 static bool loadObject(lua_State* lua, int index, const char* fallbackId, LuaWorldObject* object, size_t objectIndex) {
     object->conditionRef = LUA_NOREF;
     object->onOpenRef = LUA_NOREF;
@@ -408,6 +412,7 @@ bool luaWorldLoad(const char* filename) {
         if (!lua_istable(lua, -1)) {
             setError("objects['%s'] must be a table", lua_tostring(lua, -2));
             lua_pop(lua, 3);
+            // TODO: Need to get rid of this horriblness
             goto cleanup;
         }
 

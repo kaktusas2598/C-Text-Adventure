@@ -93,6 +93,8 @@ Object* objectById(const char* id) {
     return NULL;
 }
 
+// First pass: copy scalar/default data from Lua definitions into runtime objects.
+// Pointer references are resolved in a later pass once all objects exist.
 static bool populateObject(Object* object, const char* id) {
     const LuaWorldObject* source = luaWorldFind(id);
 
@@ -131,6 +133,7 @@ static bool populateObject(Object* object, const char* id) {
     return true;
 }
 
+// Second pass: resolve string ids such as location/destination into Object pointers.
 static bool resolveReference(Object** dest, const char* objectId, const char* fieldName, const char* targetId) {
     if (targetId == NULL) {
         *dest = NULL;
