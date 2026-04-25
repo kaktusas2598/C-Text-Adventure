@@ -151,7 +151,7 @@ static bool resolveReferences(void) {
 }
 
 bool objectInitFromLuaWorld(void) {
-    const LuaWorld* luaWorld;
+    const World* luaWorld;
     size_t i;
 
     objectFree();

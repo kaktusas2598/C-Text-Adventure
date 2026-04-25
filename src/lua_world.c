@@ -16,7 +16,7 @@
 #include "object.h"
 
 // TODO: move ownership or leave here?
-static LuaWorld world;
+static World world;
 static lua_State* worldLua;
 static int worldRef = LUA_NOREF;
 
@@ -41,7 +41,7 @@ void luaWorldUnload(void) {
     // lastError[0] = '\0';
 }
 
-const LuaWorld* luaWorldGet(void) {
+const World* luaWorldGet(void) {
     return &world;
 }
 

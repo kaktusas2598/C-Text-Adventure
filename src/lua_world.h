@@ -10,11 +10,11 @@
 typedef struct {
     Object* objects;
     size_t count;
-} LuaWorld; //TODO: Probably should rename to just World and use instead of objs and endOfObjs or integrate them here?
+} World;
 
 bool luaWorldLoad(const char* filename);
 void luaWorldUnload(void);
-const LuaWorld* luaWorldGet(void);
+const World* luaWorldGet(void);
 bool luaWorldEvaluateCondition(const Object* object, bool* result);
 
 #endif
