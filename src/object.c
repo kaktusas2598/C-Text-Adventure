@@ -164,6 +164,7 @@ bool objectInitFromLuaWorld(void) {
     }
 
     // LuaWorld struct owns objects memory, just assigning it here to track it in the engine
+    // TODO: one source of memory would probably be best, struct World seems nicer, but objs is used in main engine logic
     objs = luaWorld->objects;
     endOfObjs = objs + luaWorld->count;
 

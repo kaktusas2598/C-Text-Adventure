@@ -45,7 +45,6 @@ struct Object {
     char* description;
     const char** tags;
     size_t tagCount; // Currently not used anywhere
-    // TODO: currently not used in engine, but could be used to improve some code 
     char *kind; // Location, Actor, Passage, Item or Container
 
     Object* location;

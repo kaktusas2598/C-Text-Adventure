@@ -1,6 +1,7 @@
 #include "misc.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include "object.h"
 
 #include "colour.h"
@@ -74,10 +75,10 @@ int listObjectsAtLocation(Object* location) {
             if (count++ == 0) {
                 printf("%s:\n", location->contents);
             }
-            // TODO: switch colour based on object type(actor, item, container etc.), will build a layer for that possibly
-            if (obj->health > 0) {
-                printf("%s%s%s\n", RED, obj->description, RESET);
-            } else if (obj->capacity > 0) {
+
+            if (strcmp(obj->kind, "actor") == 0) {
+                printf("%s\n", obj->description);
+            } else if (strcmp(obj->kind, "container") == 0 || strcmp(obj->kind, "passage") == 0) {
                 printf("%s%s%s\n", BLUE, obj->description, RESET);
             } else {
                 printf("%s%s%s\n", GREEN, obj->description, RESET);
