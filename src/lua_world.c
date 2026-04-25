@@ -17,7 +17,7 @@
 
 // TODO: move ownership or leave here?
 static World world;
-static lua_State* worldLua;
+static lua_State* worldLua; // Global Lua state
 static int worldRef = LUA_NOREF;
 
 static void resetLuaState(void) {
@@ -218,8 +218,9 @@ bool luaWorldLoad(const char* filename) {
         return false;
     }
 
+    // Check if main user provided script returns a table
     if (!lua_istable(lua, -1)) {
-        setError("world.lua must return a table");
+        setError("%s must return a table", filename);
         resetLuaState();
         return false;
     }
@@ -228,14 +229,16 @@ bool luaWorldLoad(const char* filename) {
     worldRef = luaL_ref(lua, LUA_REGISTRYINDEX);
     registerEngineBindings(lua, worldRef);
 
+    // Check if 'objects' field is set and defines a table in main table returned
     lua_getfield(lua, -1, "objects");
     if (!lua_istable(lua, -1)) {
-        setError("world.lua must define an 'objects' table");
+        setError("%s must define an 'objects' table", filename);
         lua_pop(lua, 2);
         resetLuaState();
         return false;
     }
 
+    // Count all objects in table 'objects' and dynamically allocate memory for world
     count = countNamedObjects(lua, lua_gettop(lua));
     world.objects = calloc(count, sizeof *world.objects);
     if (count > 0 && world.objects == NULL) {
@@ -247,6 +250,7 @@ bool luaWorldLoad(const char* filename) {
 
     world.count = count;
     i = 0;
+    // Load all Object pointers in the World
     lua_pushnil(lua);
     while (lua_next(lua, -2) != 0) {
         const char* objectId;
