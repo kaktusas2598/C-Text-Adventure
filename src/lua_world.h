@@ -4,53 +4,17 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef struct LuaWorldObject {
-    char* id;
-    char* kind;
-    char* description;
-    char** tags;
-    size_t tagCount;
-    char* location;
-    char* destination;
-    char* prospect;
-    char* details;
-    char* contents;
-    char* textGo;
-    char* gossip;
-    char* condition;
-    int conditionRef;
-    char* togglesTo;
-    char* mirrorsTo;
-    char* locksTo;
-    char* keyId;
-    char* onOpen;
-    int onOpenRef;
-    char* onClose;
-    int onCloseRef;
-    char* onLock;
-    int onLockRef;
-    char* onUnlock;
-    int onUnlockRef;
-    int weight;
-    int capacity;
-    int health;
-    int light;
-    int impact;
-    int trust;
-    char* deathDestination; // Optional field for where the player should be moved to when they die
-    char* dropDestination;  // Optional field for where the player's objects should be moved to when they die
-} LuaWorldObject;
+// TODO: possibly better to move World struct to object.h?
+ typedef struct Object Object;
 
 typedef struct {
-    LuaWorldObject* objects;
+    Object* objects;
     size_t count;
-} LuaWorld;
+} LuaWorld; //TODO: Probably should rename to just World and use instead of objs and endOfObjs or integrate them here?
 
 bool luaWorldLoad(const char* filename);
 void luaWorldUnload(void);
 const LuaWorld* luaWorldGet(void);
-const LuaWorldObject* luaWorldFind(const char* id);
-bool luaWorldEvaluateCondition(const LuaWorldObject* object, bool* result);
-const char* luaWorldGetLastError(void);
+bool luaWorldEvaluateCondition(const Object* object, bool* result);
 
 #endif

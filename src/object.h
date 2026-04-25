@@ -2,18 +2,51 @@
 #define OBJECT_H
 
 #include <stdbool.h>
+#include <stddef.h> // For size_t
 
-typedef struct LuaWorldObject LuaWorldObject;
 typedef struct Object Object;
 
 typedef bool (*ObjectCondition)(Object* object);
 typedef void (*ObjectAction)(Object* object);
 
+// Used to store Ids to other Object* each Object might reference too and used later to resolve those references
+// into Object pointers such as location, destination or lua ref to method engine needs to call.
+typedef struct LuaObjectMetadata {
+    char* locationId;
+    char* destinationId;
+    char* prospectId;
+
+    char* togglesToId;
+    char* mirrorsToId;
+    char* locksToId;
+    char* keyId;
+
+    // TODO: probably only need int refs to lua here?
+    char* condition;
+    int conditionRef;
+    char* onOpen;
+    int onOpenRef;
+    char* onClose;
+    int onCloseRef;
+    char* onLock;
+    int onLockRef;
+    char* onUnlock;
+    int onUnlockRef;
+
+    char* deathDestinationId; 
+    char* dropDestinationId;  
+} LuaObjectMetadata;
+
+
+// Main structure representing each Object in a text adventure game
 struct Object {
-    const char* id;
+    char* id;
     ObjectCondition condition;
-    const char* description;
+    char* description;
     const char** tags;
+    size_t tagCount; // Currently not used anywhere
+    // TODO: currently not used in engine, but could be used to improve some code 
+    char *kind; // Location, Actor, Passage, Item or Container
 
     Object* location;
     Object* destination;
@@ -27,13 +60,13 @@ struct Object {
     Object* locksTo;   // Optional locked/unlocked state partner
     Object* key;       // Optional key object required for lock/unlock
 
-    const char* details;
-    const char* contents;
-    const char* textGo; // Optional text to show when player tries to go to this object, e.g. "You can't go there, it's a wall."
-    const char* gossip;
+    char* details;
+    char* contents;
+    char* textGo; // Optional text to show when player tries to go to this object, e.g. "You can't go there, it's a wall."
+    char* gossip;
 
     int weight;
-    int capacity;
+    int capacity; // How much does an object can contain (eg. actor pockets or container)
     int health;
     int light;
     int impact; // Optional field for attackable objects that determines how much damage they deal when attacking the player, or how much damage they take when attacked by the player
@@ -45,9 +78,10 @@ struct Object {
     ObjectAction lock;
     ObjectAction unlock;
 
-    const LuaWorldObject* luaObject;
+    LuaObjectMetadata luaMetadata;
 };
 
+// TODO: either keep using this in the engine or just use World struct?
 extern Object* objs;
 extern Object* endOfObjs;
 extern Object* player;
@@ -57,6 +91,5 @@ extern Object* player;
 bool objectInitFromLuaWorld(void);
 void objectFree(void);
 Object* objectById(const char* id);
-const char* objectGetLastError(void);
 
 #endif
