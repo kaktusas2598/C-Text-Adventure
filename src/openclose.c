@@ -6,24 +6,24 @@
 
 int executeOpen(void) {
     Object* obj = reachableObject("what you want to open", params[0]);
-    if (obj != NULL) (*obj->open)();
+    if (obj != NULL) (*obj->open)(obj);
     return obj != NULL ? 1 : 0;
 }
 
 int executeClose(void) {
     Object* obj = reachableObject("what you want to close", params[0]);
-    if (obj != NULL) (*obj->close)();
+    if (obj != NULL) (*obj->close)(obj);
     return obj != NULL ? 1 : 0;
 }
 
 int executeLock(void) {
     Object* obj = reachableObject("what you want to lock", params[0]);
-    if (obj != NULL) (*obj->lock)();
+    if (obj != NULL) (*obj->lock)(obj);
     return obj != NULL ? 1 : 0;
 }
 
 int executeUnlock(void) {
     Object* obj = reachableObject("what you want to unlock", params[0]);
-    if (obj != NULL) (*obj->unlock)();
+    if (obj != NULL) (*obj->unlock)(obj);
     return obj != NULL ? 1 : 0;
 }

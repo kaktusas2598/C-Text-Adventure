@@ -19,6 +19,7 @@ char* expand(char* input, int bufferSize) {
         {"s", "go south"},
         {"e", "go east"},
         {"w", "go west"},
+        {"q", "quit"},
         {"inv", "inventory"},
         {"x A", "examine "},
         {"A", NULL}

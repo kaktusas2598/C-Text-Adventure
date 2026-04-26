@@ -37,7 +37,7 @@ int moveObject(Object* obj, Object* to) {
         printf("It seems %s feels reluctant to give you anything.\n", obj->location->description);
         return 1;
     } else if (to->capacity == 0) {
-        printf(obj == keyForBox && (to == closedBox || to == lockedBox) ?
+        printf(to->key == obj ?
             "The key seems to fit the lock.\n" :
             "It doesn't seem to fit there.\n"
         );

@@ -67,6 +67,8 @@ int parseAndExecute(char* input) {
         {"turn A off", executeTurnOff},
         {"talk with B about A", executeTalkTo},
         {"talk about A with B", executeTalkTo},
+        {"talk to B about A", executeTalkTo},
+        {"talk about A to B", executeTalkTo},
         {"talk about A", executeTalk},
         {"talk A", executeTalk},
         {"attack with B", executeAttack},

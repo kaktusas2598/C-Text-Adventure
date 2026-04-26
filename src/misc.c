@@ -1,7 +1,10 @@
 #include "misc.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include "object.h"
+
+#include "colour.h"
 
 bool isHolding(Object* container, Object* obj) {
     return validObject(obj) && obj->location == container;
@@ -72,7 +75,14 @@ int listObjectsAtLocation(Object* location) {
             if (count++ == 0) {
                 printf("%s:\n", location->contents);
             }
-            printf("%s\n", obj->description);
+
+            if (strcmp(obj->kind, "actor") == 0) {
+                printf("%s\n", obj->description);
+            } else if (strcmp(obj->kind, "container") == 0 || strcmp(obj->kind, "passage") == 0) {
+                printf("%s%s%s\n", BLUE, obj->description, RESET);
+            } else {
+                printf("%s%s%s\n", GREEN, obj->description, RESET);
+            }
         }
     }
 
