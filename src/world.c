@@ -1,4 +1,4 @@
-#include "lua_world.h"
+#include "world.h"
 #include "lua_bindings.h"
 #include "file_utils.h"
 #include "error.h"
@@ -15,10 +15,10 @@
 // Temporary?
 #include "object.h"
 
-// TODO: move ownership or leave here?
 static World world;
 static lua_State* worldLua; // Global Lua state
 static int worldRef = LUA_NOREF;
+
 
 static void resetLuaState(void) {
     if (worldLua != NULL) {
@@ -28,20 +28,15 @@ static void resetLuaState(void) {
     worldRef = LUA_NOREF;
 }
 
-void luaWorldUnload(void) {
-    // TODO: seem to cause exeption here when quiting the game, pointers do seem to be pointing 
-    // to all objects with correct count, not in the order lua file describes them though
-    // for (size_t i = 0; i < world.count; i++) {
-    //     free(&world.objects[i]);
-    // }
-
+void worldUnload(void) {
     free(world.objects);
     memset(&world, 0, sizeof world);
     resetLuaState();
-    // lastError[0] = '\0';
+
+    world.objects = NULL;
 }
 
-const World* luaWorldGet(void) {
+const World* worldGet(void) {
     return &world;
 }
 
@@ -193,12 +188,12 @@ static bool loadObject(lua_State* lua, int index, const char* fallbackId, Object
     return validateObject(object, objectIndex);
 }
 
-bool luaWorldLoad(const char* filename) {
+bool worldLoad(const char* filename) {
     lua_State* lua;
     size_t count;
     size_t i;
 
-    luaWorldUnload();
+    worldUnload();
     if (filename == NULL || !fileExists(filename)) {
         return true;
     }
@@ -263,14 +258,14 @@ bool luaWorldLoad(const char* filename) {
         if (!lua_istable(lua, -1)) {
             setError("objects['%s'] must be a table", lua_tostring(lua, -2));
             lua_pop(lua, 3);
-            luaWorldUnload();
+            worldUnload();
             return false;
         }
 
         objectId = lua_tostring(lua, -2);
         if (!loadObject(lua, -1, objectId, &world.objects[i], i)) {
             lua_pop(lua, 3);
-            luaWorldUnload();
+            worldUnload();
             return false;
         }
         i++;
@@ -279,7 +274,7 @@ bool luaWorldLoad(const char* filename) {
 
     if (!validateUniqueIds()) {
         lua_pop(lua, 2);
-        luaWorldUnload();
+        worldUnload();
         return false;
     }
 
@@ -287,7 +282,7 @@ bool luaWorldLoad(const char* filename) {
     return true;
 }
 
-bool luaWorldEvaluateCondition(const Object* object, bool* result) {
+bool worldEvaluateCondition(const Object* object, bool* result) {
     int status;
 
     if (result != NULL) {
@@ -329,5 +324,38 @@ bool luaWorldEvaluateCondition(const Object* object, bool* result) {
         *result = lua_toboolean(worldLua, -1) != 0;
     }
     lua_pop(worldLua, 1);
+    return true;
+}
+
+bool worldLoadObjects(void) {
+    const World* luaWorld;
+    size_t i;
+
+    luaWorld = worldGet();
+    if (luaWorld == NULL) {
+        setError("Lua world is not loaded");
+        return false;
+    }
+
+    // TEMP
+    objs = luaWorld->objects;
+    endOfObjs = objs + luaWorld->count;
+
+    for(Object* o = luaWorld->objects; o < luaWorld->objects + luaWorld->count; o++)
+        initializeRuntimeFields(o);
+
+    // Resolve Object pointer references (location, destination, prospect)
+    for(Object* o = luaWorld->objects; o < luaWorld->objects + luaWorld->count; o++)
+        if (!resolveReferences(o))
+            return false;
+    
+
+    // Resolve required objects, for now only player is required to be defined
+    player = objectById("player");
+    if (player == NULL) {
+        setError("object 'player' is required to be defined in Lua game file.");
+        return false;
+    }
+
     return true;
 }

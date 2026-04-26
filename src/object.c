@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lua_world.h"
+#include "world.h"
 #include "toggle.h"
 #include "colour.h"
 #include "error.h"
@@ -34,7 +34,7 @@ static bool luaCondition(Object* object) {
         return false;
     }
 
-    if (!luaWorldEvaluateCondition(object, &result)) {
+    if (!worldEvaluateCondition(object, &result)) {
         setError("Lua condition failed for '%s': %s", object->id, getLastError());
         fprintf(stderr, "%s%s%s\n", getLastError(), RED, RESET);
         return false;
@@ -76,7 +76,8 @@ Object* objectById(const char* id) {
         return NULL;
     }
 
-    for (object = objs; object < endOfObjs; object++) {
+    object = worldGet()->objects;
+    for (object; object < object + worldGet()->count; object++) {
         if (object->id != NULL && strcmp(object->id, id) == 0) {
             return object;
         }
@@ -85,23 +86,19 @@ Object* objectById(const char* id) {
     return NULL;
 }
 
-static void initializeRuntimeFields(void) {
-    Object* object;
+void initializeRuntimeFields(Object* object) {
+    object->condition = object->luaMetadata.conditionRef >= 0 ? luaCondition : alwaysTrue;
 
-    for (object = objs; object < endOfObjs; object++) {
-        object->condition = object->luaMetadata.conditionRef >= 0 ? luaCondition : alwaysTrue;
+    object->details = object->details != NULL ? object->details : (char*)defaultDetails;
+    object->contents = object->contents != NULL ? object->contents : (char*)defaultContents;
+    object->textGo = object->textGo != NULL ? object->textGo : (char*)defaultTextGo;
+    object->gossip = object->gossip != NULL ? object->gossip : (char*)defaultGossip;
+    object->weight = object->weight != 0 ? object->weight : defaultWeight;
 
-        object->details = object->details != NULL ? object->details : (char*)defaultDetails;
-        object->contents = object->contents != NULL ? object->contents : (char*)defaultContents;
-        object->textGo = object->textGo != NULL ? object->textGo : (char*)defaultTextGo;
-        object->gossip = object->gossip != NULL ? object->gossip : (char*)defaultGossip;
-        object->weight = object->weight != 0 ? object->weight : defaultWeight;
-
-        object->open = resolveAction(object->luaMetadata.onOpen, cannotBeOpened);
-        object->close = resolveAction(object->luaMetadata.onClose, cannotBeClosed);
-        object->lock = resolveAction(object->luaMetadata.onLock, cannotBeLocked);
-        object->unlock = resolveAction(object->luaMetadata.onUnlock, cannotBeUnlocked);
-    }
+    object->open = resolveAction(object->luaMetadata.onOpen, cannotBeOpened);
+    object->close = resolveAction(object->luaMetadata.onClose, cannotBeClosed);
+    object->lock = resolveAction(object->luaMetadata.onLock, cannotBeLocked);
+    object->unlock = resolveAction(object->luaMetadata.onUnlock, cannotBeUnlocked);
 }
 
 // Resolve string ids such as location/destination into Object pointers.
@@ -125,70 +122,22 @@ static bool resolveReference(Object** dest, const char* objectId, const char* fi
     return true;
 }
 
-static bool resolveReferences(void) {
-    Object* object;
-
-    for (object = objs; object < endOfObjs; object++) {
-        if (!resolveReference(&object->location, object->id, "location", object->luaMetadata.locationId) ||
-            !resolveReference(&object->destination, object->id, "destination", object->luaMetadata.destinationId) ||
-            !resolveReference(&object->togglesTo, object->id, "toggles_to", object->luaMetadata.togglesToId) ||
-            !resolveReference(&object->mirrorsTo, object->id, "mirrors_to", object->luaMetadata.mirrorsToId) ||
-            !resolveReference(&object->locksTo, object->id, "locks_to", object->luaMetadata.locksToId) ||
-            !resolveReference(&object->key, object->id, "key_id", object->luaMetadata.keyId) ||
-            !resolveReference(&object->deathDestination, object->id, "death_destination", object->luaMetadata.deathDestinationId) ||
-            !resolveReference(&object->dropDestination, object->id, "drop_destination", object->luaMetadata.dropDestinationId) ||
-            !resolveReference(
-                &object->prospect,
-                object->id,
-                "prospect",
-                object->luaMetadata.prospectId != NULL ? object->luaMetadata.prospectId : object->luaMetadata.destinationId
-            )) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool objectInitFromLuaWorld(void) {
-    const World* luaWorld;
-    size_t i;
-
-    objectFree();
-    // getLastError()[0] = '\0';
-
-    luaWorld = luaWorldGet();
-    if (luaWorld == NULL) {
-        setError("Lua world is not loaded");
-        return false;
-    }
-
-    // LuaWorld struct owns objects memory, just assigning it here to track it in the engine
-    // TODO: one source of memory would probably be best, struct World seems nicer, but objs is used in main engine logic
-    objs = luaWorld->objects;
-    endOfObjs = objs + luaWorld->count;
-
-    initializeRuntimeFields();
-
-    // Resolve Object pointer references (location, destination, prospect)
-    if (!resolveReferences()) {
-        objectFree();
-        return false;
-    }
-
-    // Resolve required objects, for now only player is required to be defined
-    player = objectById("player");
-    if (player == NULL) {
-        objectFree();
-        setError("object 'player' is required to be defined in Lua game file.");
+bool resolveReferences(Object* object) {
+    if (!resolveReference(&object->location, object->id, "location", object->luaMetadata.locationId) ||
+        !resolveReference(&object->destination, object->id, "destination", object->luaMetadata.destinationId) ||
+        !resolveReference(&object->togglesTo, object->id, "toggles_to", object->luaMetadata.togglesToId) ||
+        !resolveReference(&object->mirrorsTo, object->id, "mirrors_to", object->luaMetadata.mirrorsToId) ||
+        !resolveReference(&object->locksTo, object->id, "locks_to", object->luaMetadata.locksToId) ||
+        !resolveReference(&object->key, object->id, "key_id", object->luaMetadata.keyId) ||
+        !resolveReference(&object->deathDestination, object->id, "death_destination", object->luaMetadata.deathDestinationId) ||
+        !resolveReference(&object->dropDestination, object->id, "drop_destination", object->luaMetadata.dropDestinationId) ||
+        !resolveReference(
+            &object->prospect,
+            object->id,
+            "prospect",
+            object->luaMetadata.prospectId != NULL ? object->luaMetadata.prospectId : object->luaMetadata.destinationId)) {
         return false;
     }
 
     return true;
-}
-
-void objectFree(void) {
-    objs = NULL;
-    endOfObjs = NULL;
-    player = NULL;
 }

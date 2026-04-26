@@ -5,7 +5,7 @@
 #include "object.h"
 #include "parsexec.h"
 #include "turn.h"
-#include "lua_world.h"
+#include "world.h"
 #include "colour.h"
 #include "error.h"
 
@@ -71,21 +71,19 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if (!luaWorldLoad(worldFile)) {
+    if (!worldLoad(worldFile)) {
         fprintf(stderr, "%sFailed to load %s: %s%s\n", RED, worldFile, getLastError(), RESET);
         return 1;
     }
-    if (!objectInitFromLuaWorld()) {
+    if (!worldLoadObjects()) {
         fprintf(stderr, "%sFailed to build runtime objects from %s: %s%s\n", RED, worldFile, getLastError(), RESET);
-        luaWorldUnload();
+        worldUnload();
         return 1;
     }
 
     printf("Welcome to Text Adventure!\n");
     while(processInput(input, sizeof input) && getInput(saveFile));
     printf("\nGood Bye!\n");
-    luaWorldUnload();
-    // Important here to free objects AFTER lua world unload call
-    objectFree();
+    worldUnload();
     return 0;
 }

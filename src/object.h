@@ -87,8 +87,10 @@ extern Object* player;
 
 #define validObject(obj)     ((obj) != NULL && (obj)->condition(obj))
 
-bool objectInitFromLuaWorld(void);
-void objectFree(void);
 Object* objectById(const char* id);
+
+
+bool resolveReferences(Object* object);
+void initializeRuntimeFields(Object* object);
 
 #endif
